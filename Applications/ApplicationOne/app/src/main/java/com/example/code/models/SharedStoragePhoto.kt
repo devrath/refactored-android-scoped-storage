@@ -1,4 +1,4 @@
-package com.example.code.utils
+package com.example.code.models
 
 import android.net.Uri
 

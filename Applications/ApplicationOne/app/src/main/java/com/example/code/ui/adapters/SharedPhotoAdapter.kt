@@ -1,4 +1,4 @@
-package com.example.code.utils
+package com.example.code.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,20 +7,21 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.code.databinding.ItemPhotoBinding
+import com.example.code.models.SharedStoragePhoto
 
-class InternalStoragePhotoAdapter(
-    private val onPhotoClick: (InternalStoragePhoto) -> Unit
-) : ListAdapter<InternalStoragePhoto, InternalStoragePhotoAdapter.PhotoViewHolder>(Companion) {
+class SharedPhotoAdapter(
+    private val onPhotoClick: (SharedStoragePhoto) -> Unit
+) : ListAdapter<SharedStoragePhoto, SharedPhotoAdapter.PhotoViewHolder>(Companion) {
 
     inner class PhotoViewHolder(val binding: ItemPhotoBinding): RecyclerView.ViewHolder(binding.root)
 
-    companion object : DiffUtil.ItemCallback<InternalStoragePhoto>() {
-        override fun areItemsTheSame(oldItem: InternalStoragePhoto, newItem: InternalStoragePhoto): Boolean {
-            return oldItem.name == newItem.name
+    companion object : DiffUtil.ItemCallback<SharedStoragePhoto>() {
+        override fun areItemsTheSame(oldItem: SharedStoragePhoto, newItem: SharedStoragePhoto): Boolean {
+            return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: InternalStoragePhoto, newItem: InternalStoragePhoto): Boolean {
-            return oldItem.name == newItem.name && oldItem.bmp.sameAs(newItem.bmp)
+        override fun areContentsTheSame(oldItem: SharedStoragePhoto, newItem: SharedStoragePhoto): Boolean {
+            return oldItem == newItem
         }
     }
 
@@ -37,9 +38,9 @@ class InternalStoragePhotoAdapter(
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         val photo = currentList[position]
         holder.binding.apply {
-            ivPhoto.setImageBitmap(photo.bmp)
+            ivPhoto.setImageURI(photo.contentUri)
 
-            val aspectRatio = photo.bmp.width.toFloat() / photo.bmp.height.toFloat()
+            val aspectRatio = photo.width.toFloat() / photo.height.toFloat()
             ConstraintSet().apply {
                 clone(root)
                 setDimensionRatio(ivPhoto.id, aspectRatio.toString())

@@ -1,4 +1,4 @@
-package com.example.code.ui
+package com.example.code.ui.activities
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -11,8 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.code.databinding.ActivityInternalStorageImagesBinding
-import com.example.code.utils.InternalStoragePhoto
-import com.example.code.utils.InternalStoragePhotoAdapter
+import com.example.code.models.InternalStoragePhoto
+import com.example.code.ui.adapters.InternalStoragePhotoAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
