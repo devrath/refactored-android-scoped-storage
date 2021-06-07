@@ -5,4 +5,7 @@
     <string name="internal_storage_images">Internal storage images</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="str_camera">Camera</string>
+    <string name="str_internal_storage">Internal Storage</string>
+    <string name="str_external_storage">External Storage</string>
 </resources>

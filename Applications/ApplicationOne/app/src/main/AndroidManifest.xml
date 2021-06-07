@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Code">
-        <activity android:name=".ui.activities.MainActivity">
+        <activity android:name=".ui.activities.ApplicationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,7 +18,7 @@
         </activity>
         <activity android:name=".ui.activities.InternalStorageImagesActivity"
             android:label="@string/internal_storage_images"/>
-        <activity android:name=".ui.activities.InternalStorageImageGalleryActivity"
+        <activity android:name=".ui.activities.MainActivity"
             android:label="@string/internal_storage_images"/>
 
     </application>

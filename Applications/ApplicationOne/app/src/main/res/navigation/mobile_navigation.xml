@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/navigation_internal_storage_gallery_fragment">
+
+    <fragment
+        android:id="@+id/navigation_internal_storage_gallery_fragment"
+        android:name="com.example.code.ui.fragments.InternalStorageGalleryFragment"
+        android:label="@string/str_internal_storage" />
+
+    <fragment
+        android:id="@+id/navigation_external_storage_gallery_fragment"
+        android:name="com.example.code.ui.fragments.ExternalStorageGalleryFragment"
+        android:label="@string/str_external_storage" />
+
+    <fragment
+        android:id="@+id/navigation_camera_fragment"
+        android:name="com.example.code.ui.fragments.CameraFragment"
+        android:label="@string/str_camera" />
+
+</navigation>
