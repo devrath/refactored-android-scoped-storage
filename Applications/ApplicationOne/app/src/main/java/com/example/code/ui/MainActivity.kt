@@ -1,8 +1,9 @@
-package com.example.code
+package com.example.code.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.code.databinding.ActivityMainBinding
+import com.example.code.openActivity
 
 class MainActivity : AppCompatActivity() {
 
