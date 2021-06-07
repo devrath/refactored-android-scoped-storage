@@ -2,5 +2,7 @@
     <string name="app_name">code</string>
     <string name="selection_screen">Selection screen</string>
     <string name="retrieve_images_from_internal_storage">Retrieve images from internal storage</string>
-    <string name="internal_storage_imgs">Internal storage images</string>
+    <string name="internal_storage_images">Internal storage images</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
