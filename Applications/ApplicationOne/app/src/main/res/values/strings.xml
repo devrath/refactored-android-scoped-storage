@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">code</string>
+    <string name="retrieve_images_from_internal_storage">Retrieve images from internal storage</string>
+    <string name="internal_storage_imgs">Internal storage images</string>
+</resources>
