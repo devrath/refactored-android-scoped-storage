@@ -1,10 +1,9 @@
 package com.example.code.ui.activities
 
 import android.os.Bundle
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
+import android.widget.Toast
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.code.R
@@ -16,9 +15,11 @@ class ApplicationActivity : BaseActivity<ActivityApplicationBinding>(ActivityApp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navView: BottomNavigationView = findViewById(R.id.nav_view)
         binding.apply {
-            val navView: BottomNavigationView = findViewById(R.id.nav_view)
-            val navController = findNavController(R.id.nav_host_fragment)
+
             val appBarConfiguration = AppBarConfiguration(
                     setOf(
                             R.id.navigation_internal_storage_gallery_fragment,
@@ -26,10 +27,16 @@ class ApplicationActivity : BaseActivity<ActivityApplicationBinding>(ActivityApp
                             R.id.navigation_camera_fragment
                     )
             )
-            setupActionBarWithNavController(navController, appBarConfiguration)
-            navView.setupWithNavController(navController)
+            setupActionBarWithNavController( navHostFragment.navController, appBarConfiguration)
+            navView.setupWithNavController( navHostFragment.navController)
             navView.background = null
             navView.menu.getItem(1).isEnabled = false
+        }
+
+
+
+        binding.cameraId.setOnClickListener {
+            Toast.makeText(this@ApplicationActivity,"Launch Camera",Toast.LENGTH_LONG).show()
         }
 
     }
