@@ -6,14 +6,12 @@
         android:icon="@drawable/ic_internal_storage"
         android:title="@string/str_internal_storage" />
 
+    <item android:id="@+id/placeholder"
+        android:title="" />
+
     <item
         android:id="@+id/navigation_external_storage_gallery_fragment"
         android:icon="@drawable/ic_external_storage"
         android:title="@string/str_external_storage" />
-
-    <item
-        android:id="@+id/navigation_camera_fragment"
-        android:icon="@drawable/ic_camera"
-        android:title="@string/str_camera" />
 
 </menu>

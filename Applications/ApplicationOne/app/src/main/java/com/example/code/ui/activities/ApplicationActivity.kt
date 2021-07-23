@@ -28,6 +28,8 @@ class ApplicationActivity : BaseActivity<ActivityApplicationBinding>(ActivityApp
             )
             setupActionBarWithNavController(navController, appBarConfiguration)
             navView.setupWithNavController(navController)
+            navView.background = null
+            navView.menu.getItem(1).isEnabled = false
         }
 
     }

@@ -10,9 +10,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.apply {
-            btnInternalStorageImgId.setOnClickListener {
-                openActivity(InternalStorageImagesActivity::class.java)
-            }
+
+            //bottomNavigationView.background = null
+            //bottomNavigationView.menu.getItem(1).isEnabled = false
         }
     }
 
