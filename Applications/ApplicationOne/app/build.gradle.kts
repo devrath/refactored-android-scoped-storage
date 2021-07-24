@@ -33,30 +33,22 @@ android {
 
 dependencies {
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.32")
-    implementation("androidx.core:core-ktx:1.6.0")
-    implementation("androidx.appcompat:appcompat:1.3.0")
-    implementation("com.google.android.material:material:1.4.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
-    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation(Libraries.kotlin_stdlib)
+    implementation(Libraries.core_ktx)
+    implementation(Libraries.appcompat)
+    implementation(Libraries.constraint_layout)
+    implementation(Libraries.legacy_support_v4)
+    implementation(Libraries.activity_ktx)
+    implementation(Libraries.fragment_ktx)
+    implementation(Libraries.kotlinx_coroutines_core)
+    implementation(Libraries.kotlinx_coroutines_android)
+    implementation(Libraries.lifecycle_viewmodel_ktx)
+    implementation(Libraries.lifecycle_runtime_ktx)
+    implementation(Libraries.navigation_fragment_ktx)
+    implementation(Libraries.navigation_ui_ktx)
+    implementation(Libraries.google_material)
+    testImplementation(UnitTestLibraries.junit4)
 
-    testImplementation("junit:junit:4.+")
-
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-
-    implementation("androidx.activity:activity-ktx:1.2.4")
-    implementation("androidx.fragment:fragment-ktx:1.3.6")
-
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
-
-
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
-
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
-
-    implementation("com.google.android.material:material:1.5.0-alpha01")
+    androidTestImplementation(AndroidTestLibraries.junit)
+    androidTestImplementation(AndroidTestLibraries.espresso)
 }
