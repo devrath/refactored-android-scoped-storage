@@ -15,9 +15,15 @@ object BuildPlugins {
 }
 
 object AndroidSdk {
-    const val min = 15
-    const val compile = 28
+    const val min = 16
+    private const val compile = 30
     const val target = compile
+    const val buildTools = "30.0.3"
+}
+
+object AppVersion {
+    const val versionCode = 16
+    const val versionName = "1.0"
 }
 
 object Libraries {
@@ -25,12 +31,10 @@ object Libraries {
         const val google_material = "1.4.0"
         const val navigation_ui_ktx = "2.3.5"
         const val navigation_fragment_ktx = "2.3.5"
-
         const val lifecycle_runtime_ktx = "2.3.1"
-        const val lifecycle_viewmodel_ktx = "2.3.1"
-        const val kotlinx_coroutines_android = "1.5.0"
-        const val kotlinx_coroutines_core = "1.5.0"
-
+        const val lifecycle_view_model_ktx = "2.3.1"
+        const val kotlin_x_coroutines_android = "1.5.0"
+        const val kotlin_x_coroutines_core = "1.5.0"
         const val fragment_ktx = "1.3.6"
         const val activity_ktx = "1.2.4"
         const val legacy_support_v4 = "1.0.0"
@@ -47,14 +51,13 @@ object Libraries {
     const val legacy_support_v4     = "androidx.legacy:legacy-support-v4:${Versions.legacy_support_v4}"
     const val activity_ktx     = "androidx.activity:activity-ktx:${Versions.activity_ktx}"
     const val fragment_ktx     = "androidx.fragment:fragment-ktx:${Versions.fragment_ktx}"
-    const val kotlinx_coroutines_core     = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinx_coroutines_core}"
-    const val kotlinx_coroutines_android     = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlinx_coroutines_android}"
-    const val lifecycle_viewmodel_ktx     = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle_viewmodel_ktx}"
+    const val kotlin_x_coroutines_core     = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlin_x_coroutines_core}"
+    const val kotlin_x_coroutines_android     = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.kotlin_x_coroutines_android}"
+    const val lifecycle_view_model_ktx     = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle_view_model_ktx}"
     const val lifecycle_runtime_ktx     = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycle_runtime_ktx}"
     const val navigation_fragment_ktx     = "androidx.navigation:navigation-fragment-ktx:${Versions.navigation_fragment_ktx}"
     const val navigation_ui_ktx     = "androidx.navigation:navigation-ui-ktx:${Versions.navigation_ui_ktx}"
     const val google_material     = "com.google.android.material:material:${Versions.google_material}"
-    //const val google_material_new     = "com.google.android.material:material:${Versions.google_material_new}"
 }
 
 object UnitTestLibraries {

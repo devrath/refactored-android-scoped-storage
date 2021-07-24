@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    compileSdkVersion(30)
-    buildToolsVersion("30.0.3")
+    compileSdkVersion(AndroidSdk.target)
+    buildToolsVersion(AndroidSdk.buildTools)
 
     defaultConfig {
         applicationId("com.example.code")
-        minSdkVersion(16)
-        targetSdkVersion(30)
-        versionCode(1)
-        versionName("1.0")
+        minSdkVersion(AndroidSdk.min)
+        targetSdkVersion(AndroidSdk.target)
+        versionCode(AppVersion.versionCode)
+        versionName(AppVersion.versionName)
         // vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner("androidx.test.runner.AndroidJUnitRunner")
     }
@@ -40,9 +40,9 @@ dependencies {
     implementation(Libraries.legacy_support_v4)
     implementation(Libraries.activity_ktx)
     implementation(Libraries.fragment_ktx)
-    implementation(Libraries.kotlinx_coroutines_core)
-    implementation(Libraries.kotlinx_coroutines_android)
-    implementation(Libraries.lifecycle_viewmodel_ktx)
+    implementation(Libraries.kotlin_x_coroutines_core)
+    implementation(Libraries.kotlin_x_coroutines_android)
+    implementation(Libraries.lifecycle_view_model_ktx)
     implementation(Libraries.lifecycle_runtime_ktx)
     implementation(Libraries.navigation_fragment_ktx)
     implementation(Libraries.navigation_ui_ktx)
