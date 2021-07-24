@@ -16,4 +16,9 @@
         <item name="android:layout_margin">@dimen/btn_container_padding</item>
     </style>
 
+    <style name="DialogTheme_transparent" parent="Theme.MaterialComponents.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--You can set other style items also, such as animations and etc-->
+    </style>
+
 </resources>

@@ -10,6 +10,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.code.R
 import com.example.code.databinding.ActivityApplicationBinding
 import com.example.code.ui.base.BaseActivity
+import com.example.code.ui.fragments.SelectionModeFragment
 import com.example.code.ui.state.ViewResult
 import com.example.code.vm.SharedViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -42,6 +43,16 @@ class ApplicationActivity : BaseActivity<ActivityApplicationBinding>(ActivityApp
 
         setupObserver()
 
+        setOnClickListener()
+
+    }
+
+    private fun setOnClickListener() {
+        binding.apply {
+            cameraId.setOnClickListener {
+                captureImage()
+            }
+        }
     }
 
     private fun setupObserver() {
@@ -61,6 +72,7 @@ class ApplicationActivity : BaseActivity<ActivityApplicationBinding>(ActivityApp
     private fun captureImage() {
         binding.cameraId.setOnClickListener {
             Toast.makeText(this@ApplicationActivity,"Launch Camera",Toast.LENGTH_LONG).show()
+            SelectionModeFragment.newInstance().show(supportFragmentManager, SelectionModeFragment.TAG)
         }
     }
 

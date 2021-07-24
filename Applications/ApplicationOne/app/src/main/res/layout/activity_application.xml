@@ -53,7 +53,8 @@
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_camera"
             app:layout_anchor="@id/bottomAppBar"
-            android:contentDescription="@string/str_camera" />
+            android:contentDescription="@string/str_camera"
+            tools:ignore="VectorDrawableCompat" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
