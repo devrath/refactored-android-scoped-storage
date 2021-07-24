@@ -41,22 +41,6 @@ class InternalStorageImagesActivity : AppCompatActivity() {
             }
         }
 
-       /* val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
-            val isPrivate = binding.switchPrivate.isChecked
-            if(isPrivate) {
-                val isSavedSuccessfully = savePhotoToInternalStorage(UUID.randomUUID().toString(), it)
-                if(isSavedSuccessfully) {
-                    loadPhotosFromInternalStorageIntoRecyclerView()
-                    Toast.makeText(this, "Photo saved successfully", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "Failed to save photo", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-        binding.btnTakePhoto.setOnClickListener {
-            takePhoto.launch()
-        }*/
         setupInternalStorageRecyclerView()
         loadPhotosFromInternalStorageIntoRecyclerView()
     }

@@ -19,6 +19,6 @@ class ExternalStorageGalleryFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.test.text = "ExternalStorageGalleryFragment"
+        //binding.test.text = "ExternalStorageGalleryFragment"
     }
 }

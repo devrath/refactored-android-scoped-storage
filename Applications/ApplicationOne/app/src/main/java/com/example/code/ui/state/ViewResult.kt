@@ -1,8 +1,12 @@
 package com.example.code.ui.state
 
+import android.graphics.Bitmap
+
 sealed class ViewResult {
 
     object InitialState : ViewResult()
+
+    data class ErrorMessage(val error : String) : ViewResult()
 
     sealed class TakePictureFromCamera: ViewResult(){
         object Success : TakePictureFromCamera()
@@ -17,7 +21,7 @@ sealed class ViewResult {
     }
 
     sealed class LoadImagesFromInternalStorage: ViewResult(){
-        object Success : LoadImagesFromInternalStorage()
+        data class Success(val fileName : String, val bitmap: Bitmap) : LoadImagesFromInternalStorage()
         data class Failure(val error : String) : LoadImagesFromInternalStorage()
         object LoadImages : LoadImagesFromInternalStorage()
     }
