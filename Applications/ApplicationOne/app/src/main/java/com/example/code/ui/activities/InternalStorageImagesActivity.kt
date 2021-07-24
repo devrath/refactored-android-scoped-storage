@@ -41,7 +41,7 @@ class InternalStorageImagesActivity : AppCompatActivity() {
             }
         }
 
-        /*val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
+       /* val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
             val isPrivate = binding.switchPrivate.isChecked
             if(isPrivate) {
                 val isSavedSuccessfully = savePhotoToInternalStorage(UUID.randomUUID().toString(), it)
@@ -56,15 +56,14 @@ class InternalStorageImagesActivity : AppCompatActivity() {
 
         binding.btnTakePhoto.setOnClickListener {
             takePhoto.launch()
-        }
-*/
+        }*/
         setupInternalStorageRecyclerView()
         loadPhotosFromInternalStorageIntoRecyclerView()
     }
 
     private fun setupInternalStorageRecyclerView() = binding.rvPrivatePhotos.apply {
         adapter = internalStoragePhotoAdapter
-        layoutManager = StaggeredGridLayoutManager(3, RecyclerView.VERTICAL)
+        //layoutManager = StaggeredGridLayoutManager(3, RecyclerView.VERTICAL)
     }
 
     private fun loadPhotosFromInternalStorageIntoRecyclerView() {
@@ -74,6 +73,11 @@ class InternalStorageImagesActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * This function is used to delete the file from the mentioned file location
+     * @param filename -> Name of the file to be deleted
+     * @return true/false -> Based on successful and unsuccessful condition
+     */
     private fun deletePhotoFromInternalStorage(filename: String): Boolean {
         return try {
             deleteFile(filename)
@@ -83,21 +87,49 @@ class InternalStorageImagesActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * This function will load the list of photos from a internal storage
+     * The function is a suspend function since it takes lot of time to load
+     * @return List of files retrieved from the internal storage
+     */
     private suspend fun loadPhotosFromInternalStorage(): List<InternalStoragePhoto> {
+        /* Since it will take lot of time to load the photos from the internal storage,
+         * lets use a IO dispatcher */
         return withContext(Dispatchers.IO) {
+            // filesDir : -> Refers to the root directory of our internal storage
+            // Here we get reference list to all files in root folder
             val files = filesDir.listFiles()
-            files?.filter { it.canRead() && it.isFile && it.name.endsWith(".jpg") }?.map {
+
+            files?.filter {
+                // If the file can be read, It is a file, It ends with .jpg
+                it.canRead() && it.isFile && it.name.endsWith(".jpg")
+            }?.map {
+                // For the filtered files -> For each file get the bytes of individual file one by one
                 val bytes = it.readBytes()
+                // Convert the bytes to bitmap
                 val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                // Return the model that comprise of file name and the bitmap
                 InternalStoragePhoto(it.name, bmp)
             } ?: listOf()
         }
     }
 
+    /**
+     * Saving the photo in internal storage
+     * @param filename - It is the name of the file we are storing
+     * @param bmp - It is the bitmap used to create the file
+     * **********************************************************************
+     * @return true/false based on if the image is successfully stored or not
+     */
     private fun savePhotoToInternalStorage(filename: String, bmp: Bitmap): Boolean {
+        // When we are dealing with the storage, It is better to wrap our code with try/catch block since many things might go wrong
         return try {
+            /* We use the openFileOutput to handle the streams, Bitmap is nothing but a chunk of data
+             * Use is a kotlin extension function we use for file handling, it helps us to close the stream after being used */
             openFileOutput("$filename.jpg", MODE_PRIVATE).use { stream ->
+                // Returns true if the write is successful else it throws exception
                 if(!bmp.compress(Bitmap.CompressFormat.JPEG, 95, stream)) {
+                    // Returns an exception in case of a failure
                     throw IOException("Couldn't save bitmap.")
                 }
             }

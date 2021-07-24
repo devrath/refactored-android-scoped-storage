@@ -2,6 +2,7 @@ package com.example.code.ui.activities
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -9,8 +10,10 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.code.R
 import com.example.code.databinding.ActivityApplicationBinding
 import com.example.code.ui.base.BaseActivity
+import com.example.code.ui.state.ViewResult
 import com.example.code.vm.SharedViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ApplicationActivity : BaseActivity<ActivityApplicationBinding>(ActivityApplicationBinding::inflate) {
@@ -37,12 +40,28 @@ class ApplicationActivity : BaseActivity<ActivityApplicationBinding>(ActivityApp
             navView.menu.getItem(1).isEnabled = false
         }
 
+        setupObserver()
 
+    }
 
+    private fun setupObserver() {
+        lifecycleScope.launchWhenStarted {
+            sharedViewModel.view.collect {
+                setViewState(it)
+            }
+        }
+    }
+
+    private fun setViewState(it: ViewResult) {
+        when (it) {
+            is ViewResult.TakePictureFromCamera.CapturePhoto -> captureImage()
+        }
+    }
+
+    private fun captureImage() {
         binding.cameraId.setOnClickListener {
             Toast.makeText(this@ApplicationActivity,"Launch Camera",Toast.LENGTH_LONG).show()
         }
-
     }
 
 }
