@@ -47,6 +47,8 @@ dependencies {
     implementation(Libraries.navigation_fragment_ktx)
     implementation(Libraries.navigation_ui_ktx)
     implementation(Libraries.google_material)
+    implementation(Libraries.koin_core)
+    implementation(Libraries.koin_android)
     testImplementation(UnitTestLibraries.junit4)
 
     androidTestImplementation(AndroidTestLibraries.junit)

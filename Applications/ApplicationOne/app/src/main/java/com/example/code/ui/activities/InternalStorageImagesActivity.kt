@@ -41,7 +41,7 @@ class InternalStorageImagesActivity : AppCompatActivity() {
             }
         }
 
-        val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
+        /*val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
             val isPrivate = binding.switchPrivate.isChecked
             if(isPrivate) {
                 val isSavedSuccessfully = savePhotoToInternalStorage(UUID.randomUUID().toString(), it)
@@ -57,7 +57,7 @@ class InternalStorageImagesActivity : AppCompatActivity() {
         binding.btnTakePhoto.setOnClickListener {
             takePhoto.launch()
         }
-
+*/
         setupInternalStorageRecyclerView()
         loadPhotosFromInternalStorageIntoRecyclerView()
     }

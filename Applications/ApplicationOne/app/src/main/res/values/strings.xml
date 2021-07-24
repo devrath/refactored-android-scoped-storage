@@ -8,4 +8,5 @@
     <string name="str_camera">Camera</string>
     <string name="str_internal_storage">Internal Storage</string>
     <string name="str_external_storage">External Storage</string>
+    <string name="image">image</string>
 </resources>

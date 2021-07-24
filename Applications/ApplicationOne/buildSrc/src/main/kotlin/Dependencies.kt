@@ -41,6 +41,7 @@ object Libraries {
         const val constraint_layout = "2.0.4"
         const val appcompat = "1.3.1"
         const val core_ktx = "1.6.0"
+        const val koin = "3.1.2"
     }
 
     const val kotlin_stdlib     = "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"
@@ -57,6 +58,8 @@ object Libraries {
     const val navigation_fragment_ktx     = "androidx.navigation:navigation-fragment-ktx:${Versions.navigation_fragment_ktx}"
     const val navigation_ui_ktx     = "androidx.navigation:navigation-ui-ktx:${Versions.navigation_ui_ktx}"
     const val google_material     = "com.google.android.material:material:${Versions.google_material}"
+    const val koin_core     = "io.insert-koin:koin-core:${Versions.koin}"
+    const val koin_android    = "io.insert-koin:koin-android:${Versions.koin}"
 }
 
 object UnitTestLibraries {

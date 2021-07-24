@@ -9,9 +9,13 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.code.R
 import com.example.code.databinding.ActivityApplicationBinding
 import com.example.code.ui.base.BaseActivity
+import com.example.code.vm.SharedViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ApplicationActivity : BaseActivity<ActivityApplicationBinding>(ActivityApplicationBinding::inflate) {
+
+    private val sharedViewModel by viewModel<SharedViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -39,14 +39,6 @@ class InternalStoragePhotoAdapter(
         val photo = currentList[position]
         holder.binding.apply {
             ivPhoto.setImageBitmap(photo.bmp)
-
-            val aspectRatio = photo.bmp.width.toFloat() / photo.bmp.height.toFloat()
-            ConstraintSet().apply {
-                clone(root)
-                setDimensionRatio(ivPhoto.id, aspectRatio.toString())
-                applyTo(root)
-            }
-
             ivPhoto.setOnLongClickListener {
                 onPhotoClick(photo)
                 true
