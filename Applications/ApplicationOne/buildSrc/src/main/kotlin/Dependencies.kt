@@ -1,9 +1,9 @@
-const val kotlinVersion = "1.3.21"
+const val kotlinVersion = "1.5.10"
 
 object BuildPlugins {
 
     object Versions {
-        const val buildToolsVersion = "3.3.1"
+        const val buildToolsVersion = "4.1.3"
     }
 
     const val androidGradlePlugin = "com.android.tools.build:gradle:${Versions.buildToolsVersion}"
@@ -41,10 +41,9 @@ object Libraries {
         const val constraint_layout = "2.0.4"
         const val appcompat = "1.3.1"
         const val core_ktx = "1.6.0"
-        const val kotlin_stdlib = "1.5.10"
     }
 
-    const val kotlin_stdlib     = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin_stdlib}"
+    const val kotlin_stdlib     = "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"
     const val core_ktx         = "androidx.core:core-ktx:${Versions.core_ktx}"
     const val appcompat     = "androidx.appcompat:appcompat:${Versions.appcompat}"
     const val constraint_layout     = "androidx.constraintlayout:constraintlayout:${Versions.constraint_layout}"
