@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.code.databinding.FragmentInternalStorageGalleryBinding
@@ -44,11 +45,8 @@ class InternalStorageGalleryFragment :
         }
 
         setupObserver()
-
         setupInternalStorageRecyclerView()
         loadPhotosFromInternalStorageIntoRecyclerView()
-
-
     }
 
     private fun setupObserver() {
@@ -66,7 +64,6 @@ class InternalStorageGalleryFragment :
     }
 
     private fun refreshList(fileName: String, bitmap: Bitmap) {
-
        val isSavedSuccessfully = savePhotoToInternalStorage(fileName,bitmap)
         if (isSavedSuccessfully) {
             loadPhotosFromInternalStorageIntoRecyclerView()
@@ -79,7 +76,7 @@ class InternalStorageGalleryFragment :
 
     private fun setupInternalStorageRecyclerView() = binding.rvPrivatePhotos.apply {
         adapter = internalStoragePhotoAdapter
-        layoutManager = StaggeredGridLayoutManager(3, RecyclerView.VERTICAL)
+        layoutManager = GridLayoutManager(activity, 3)
     }
 
     private fun loadPhotosFromInternalStorageIntoRecyclerView() {
@@ -157,17 +154,6 @@ class InternalStorageGalleryFragment :
         } catch(e: IOException) {
             e.printStackTrace()
             false
-        }
-    }
-
-
-    private fun launchCamera(isPrivate: Boolean) {
-        lifecycleScope.launch {
-            registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
-                if (isPrivate) {
-                    sharedViewModel.loadImagesFromInternalStorage(bitmap = it)
-                }
-            }
         }
     }
 

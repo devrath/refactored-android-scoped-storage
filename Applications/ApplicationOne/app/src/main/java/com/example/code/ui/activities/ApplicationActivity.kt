@@ -17,7 +17,6 @@ import com.example.code.vm.SharedViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -25,15 +24,17 @@ class ApplicationActivity :
     BaseActivity<ActivityApplicationBinding>(ActivityApplicationBinding::inflate) {
 
     private val sharedViewModel by viewModel<SharedViewModel>()
-
-
     private var isPrivate: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setUpNavView()
+        setupObserver()
+        setOnClickListener()
+    }
 
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+    private fun setUpNavView() {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         binding.apply {
 
@@ -49,17 +50,13 @@ class ApplicationActivity :
             navView.background = null
             navView.menu.getItem(1).isEnabled = false
         }
-
-        setupObserver()
-
-        setOnClickListener()
-
     }
 
     private fun setOnClickListener() {
         binding.apply {
             cameraId.setOnClickListener {
-                captureImage()
+                Toast.makeText(this@ApplicationActivity, "Launch Camera", Toast.LENGTH_LONG).show()
+                launchSelectionAlert()
             }
         }
     }
@@ -78,13 +75,6 @@ class ApplicationActivity :
         }
     }
 
-    private fun captureImage() {
-        binding.cameraId.setOnClickListener {
-            Toast.makeText(this@ApplicationActivity, "Launch Camera", Toast.LENGTH_LONG).show()
-            launchSelectionAlert()
-        }
-    }
-
     private fun launchSelectionAlert() {
         MaterialAlertDialogBuilder(this@ApplicationActivity)
             .setMessage(R.string.select_the_mode_of_storage)
@@ -98,6 +88,9 @@ class ApplicationActivity :
         takePhoto.launch()
     }
 
+    /**
+     * ON-ACTIVITY-RESULT
+     */
     private val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
         if (isPrivate) {
             sharedViewModel.loadImagesFromInternalStorage(bitmap = it)
