@@ -8,6 +8,8 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.code.databinding.FragmentInternalStorageGalleryBinding
 import com.example.code.models.InternalStoragePhoto
 import com.example.code.ui.adapters.InternalStoragePhotoAdapter
@@ -41,10 +43,12 @@ class InternalStorageGalleryFragment :
             }
         }
 
+        setupObserver()
+
         setupInternalStorageRecyclerView()
         loadPhotosFromInternalStorageIntoRecyclerView()
 
-        setupObserver()
+
     }
 
     private fun setupObserver() {
@@ -75,7 +79,7 @@ class InternalStorageGalleryFragment :
 
     private fun setupInternalStorageRecyclerView() = binding.rvPrivatePhotos.apply {
         adapter = internalStoragePhotoAdapter
-        //layoutManager = StaggeredGridLayoutManager(3, RecyclerView.VERTICAL)
+        layoutManager = StaggeredGridLayoutManager(3, RecyclerView.VERTICAL)
     }
 
     private fun loadPhotosFromInternalStorageIntoRecyclerView() {

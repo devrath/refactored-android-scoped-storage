@@ -26,6 +26,9 @@ class ApplicationActivity :
 
     private val sharedViewModel by viewModel<SharedViewModel>()
 
+
+    private var isPrivate: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -91,12 +94,13 @@ class ApplicationActivity :
     }
 
     private fun launchCamera(isPrivate: Boolean) {
-        lifecycleScope.launch {
-            registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
-                if (isPrivate) {
-                    sharedViewModel.loadImagesFromInternalStorage(bitmap = it)
-                }
-            }
+        this.isPrivate = isPrivate
+        takePhoto.launch()
+    }
+
+    private val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
+        if (isPrivate) {
+            sharedViewModel.loadImagesFromInternalStorage(bitmap = it)
         }
     }
 
