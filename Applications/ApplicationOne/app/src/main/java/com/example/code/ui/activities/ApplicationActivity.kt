@@ -1,5 +1,6 @@
 package com.example.code.ui.activities
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
@@ -10,10 +11,10 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.code.R
 import com.example.code.databinding.ActivityApplicationBinding
 import com.example.code.ui.base.BaseActivity
-import com.example.code.ui.fragments.SelectionModeFragment
 import com.example.code.ui.state.ViewResult
 import com.example.code.vm.SharedViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -72,8 +73,20 @@ class ApplicationActivity : BaseActivity<ActivityApplicationBinding>(ActivityApp
     private fun captureImage() {
         binding.cameraId.setOnClickListener {
             Toast.makeText(this@ApplicationActivity,"Launch Camera",Toast.LENGTH_LONG).show()
-            SelectionModeFragment.newInstance().show(supportFragmentManager, SelectionModeFragment.TAG)
+            launchSelectionAlert()
         }
+    }
+
+    private fun launchSelectionAlert() {
+        MaterialAlertDialogBuilder(this@ApplicationActivity)
+            .setMessage(R.string.select_the_mode_of_storage)
+            .setPositiveButton(R.string.private_true){ _, _ ->
+                Toast.makeText(applicationContext,"clicked yes",Toast.LENGTH_LONG).show()
+            }
+            .setNegativeButton(R.string.private_false){ _, _ ->
+                Toast.makeText(applicationContext,"clicked No",Toast.LENGTH_LONG).show()
+            }
+            .show()
     }
 
 }

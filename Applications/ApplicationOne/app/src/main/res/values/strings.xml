@@ -9,7 +9,8 @@
     <string name="str_internal_storage">Internal Storage</string>
     <string name="str_external_storage">External Storage</string>
     <string name="image">image</string>
-    <string name="private_true">Private - True</string>
-    <string name="private_false">Private - False</string>
+    <string name="private_true">Private-True</string>
+    <string name="private_false">Private-False</string>
+    <string name="str_mode">Mode</string>
     <string name="select_the_mode_of_storage">Select the mode of storage</string>
 </resources>
