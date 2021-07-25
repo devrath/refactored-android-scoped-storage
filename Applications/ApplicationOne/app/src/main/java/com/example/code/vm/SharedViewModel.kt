@@ -8,15 +8,18 @@ import androidx.lifecycle.viewModelScope
 import com.example.code.ui.state.ViewResult
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 
 class SharedViewModel (application: Application) : AndroidViewModel(application) {
+    
+    private val _view = MutableSharedFlow<ViewResult>()
+    val view: SharedFlow<ViewResult> = _view
 
-    private val _view = MutableStateFlow<ViewResult>(ViewResult.InitialState)
-    val view = _view.asStateFlow()
 
     var isPrivate = false
     var readPermissionGranted = false
