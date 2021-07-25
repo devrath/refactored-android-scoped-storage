@@ -31,9 +31,6 @@ class ApplicationActivity :
     private val sharedViewModel by viewModel<SharedViewModel>()
     private var isPrivate: Boolean = false
 
-    private var readPermissionGranted = false
-    private var writePermissionGranted = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpNavView()
@@ -96,19 +93,37 @@ class ApplicationActivity :
         takePhoto.launch()
     }
 
+    /**
+     * This function is used to update or ask for the permission
+     * REQUEST FOR PERMISSION:-> If the permission is not available, launch for permission request and update the flag
+     * UPDATE THE PERMISSION:--> If the permission is already available, still just update the flag without launching the request
+     */
     private fun updateOrRequestPermissions() {
-        val hasReadPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-        val hasWritePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        // For the read permission
+        val hasReadPermission = ContextCompat.checkSelfPermission(this@ApplicationActivity, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        // For the write permission
+        val hasWritePermission = ContextCompat.checkSelfPermission(this@ApplicationActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        // Check for the android version, Q = Android_29
         val minSdk29 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
-        readPermissionGranted = hasReadPermission
-        writePermissionGranted = hasWritePermission || minSdk29
-
+        sharedViewModel.readPermissionGranted = hasReadPermission
+        // Below, Q = Android_29 it has to be true to proceed and
+        // if its 29 above minSdk29 will be true and even if the hasWritePermission is false  still we proceed
+        sharedViewModel.writePermissionGranted = hasWritePermission || minSdk29
+        // Array to store the list of permissions
         val permissionsToRequest = mutableListOf<String>()
-
-        if (!writePermissionGranted) { permissionsToRequest.add(Manifest.permission.WRITE_EXTERNAL_STORAGE) }
-        if (!readPermissionGranted) { permissionsToRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE) }
-        if (permissionsToRequest.isNotEmpty()) { permissionsLauncher.launch(permissionsToRequest.toTypedArray()) }
+        // Add the permission to list if not granted
+        if (!sharedViewModel.writePermissionGranted) {
+            permissionsToRequest.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+        // Add the permission to list if not granted
+        if (!sharedViewModel.readPermissionGranted) {
+            permissionsToRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+        // Launch the permissions by passing the permissions array
+        if (permissionsToRequest.isNotEmpty()) {
+            permissionsLauncher.launch(permissionsToRequest.toTypedArray())
+        }
     }
 
 
@@ -122,10 +137,10 @@ class ApplicationActivity :
     }
 
     private val permissionsLauncher: ActivityResultLauncher<Array<String>> = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-        readPermissionGranted = permissions[Manifest.permission.READ_EXTERNAL_STORAGE]
-                ?: readPermissionGranted
-        writePermissionGranted = permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE]
-                ?: writePermissionGranted
+        sharedViewModel.readPermissionGranted = permissions[Manifest.permission.READ_EXTERNAL_STORAGE]
+                ?: sharedViewModel.readPermissionGranted
+        sharedViewModel.writePermissionGranted = permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE]
+                ?: sharedViewModel.writePermissionGranted
 
 
     }

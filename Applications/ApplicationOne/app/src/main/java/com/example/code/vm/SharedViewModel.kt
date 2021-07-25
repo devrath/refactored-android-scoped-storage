@@ -17,6 +17,9 @@ class SharedViewModel (application: Application) : AndroidViewModel(application)
     private val _view = MutableStateFlow<ViewResult>(ViewResult.InitialState)
     val view = _view.asStateFlow()
 
+    var readPermissionGranted = false
+    var writePermissionGranted = false
+
     private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
         viewModelScope.launch(Dispatchers.Main) {
             exception.localizedMessage?.let{
@@ -32,6 +35,5 @@ class SharedViewModel (application: Application) : AndroidViewModel(application)
             _view.emit(result)
         }
     }
-
 
 }
