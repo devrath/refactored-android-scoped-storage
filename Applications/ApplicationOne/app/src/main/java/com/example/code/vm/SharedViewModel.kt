@@ -2,7 +2,6 @@ package com.example.code.vm
 
 import android.app.Application
 import android.graphics.Bitmap
-import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.code.ui.state.ViewResult
@@ -18,8 +17,6 @@ class SharedViewModel (application: Application) : AndroidViewModel(application)
     private val _view = MutableStateFlow<ViewResult>(ViewResult.InitialState)
     val view = _view.asStateFlow()
 
-    lateinit var permissionsLauncher: ActivityResultLauncher<Array<String>>
-
     var isPrivate = false
     var readPermissionGranted = false
     var writePermissionGranted = false
@@ -27,7 +24,7 @@ class SharedViewModel (application: Application) : AndroidViewModel(application)
     private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
         viewModelScope.launch(Dispatchers.Main) {
             exception.localizedMessage?.let{
-                _view.emit(ViewResult.ErrorMessage(error = it))
+                _view.emit(ViewResult.AlertMessage(message = it))
             }
         }
     }
@@ -48,5 +45,11 @@ class SharedViewModel (application: Application) : AndroidViewModel(application)
         }
     }
 
+    fun displayAlert(message: String) {
+        viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
+            val result = ViewResult.AlertMessage(message = message)
+            _view.emit(result)
+        }
+    }
 
 }

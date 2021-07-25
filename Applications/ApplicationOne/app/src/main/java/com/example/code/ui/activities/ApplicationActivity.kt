@@ -4,10 +4,13 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
@@ -25,16 +28,21 @@ import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
+
 class ApplicationActivity :
         BaseActivity<ActivityApplicationBinding>(ActivityApplicationBinding::inflate) {
 
     private val sharedViewModel by viewModel<SharedViewModel>()
+
+    lateinit var permissionsLauncher: ActivityResultLauncher<Array<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpNavView()
         setupObserver()
         setOnClickListener()
+        registerForExternalStoragePermissions()
+        updateOrRequestPermissions()
     }
 
     private fun setUpNavView() {
@@ -75,7 +83,7 @@ class ApplicationActivity :
 
     private fun setViewState(it: ViewResult) {
         when (it) {
-            //is ViewResult.TakePictureFromCamera.CapturePhoto -> captureImage()
+            is ViewResult.AlertMessage -> displayAlert(it.message)
         }
     }
 
@@ -87,18 +95,17 @@ class ApplicationActivity :
                 .show()
     }
 
+    private fun displayAlert(message: String) {
+         MaterialAlertDialogBuilder(this@ApplicationActivity)
+                .setTitle(message)
+                .setPositiveButton(R.string.str_ok) { _, _ -> }
+                .show()
+    }
+
     private fun launchCamera(isPrivate: Boolean) {
         // Update the flag in the view model
         sharedViewModel.isPrivate = isPrivate
-
-        when {
-            sharedViewModel.isPrivate -> takePhoto.launch()
-            else -> {
-                registerForExternalStoragePermissions()
-                updateOrRequestPermissions()
-            }
-        }
-
+        takePhoto.launch()
     }
 
     /**
@@ -130,7 +137,7 @@ class ApplicationActivity :
         }
         // Launch the permissions by passing the permissions array
         if (permissionsToRequest.isNotEmpty()) {
-            sharedViewModel.permissionsLauncher.launch(permissionsToRequest.toTypedArray())
+            permissionsLauncher.launch(permissionsToRequest.toTypedArray())
         }
     }
 
@@ -148,11 +155,11 @@ class ApplicationActivity :
     }
 
     private fun registerForExternalStoragePermissions() {
-        sharedViewModel.permissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+       permissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             sharedViewModel.readPermissionGranted = permissions[Manifest.permission.READ_EXTERNAL_STORAGE] ?: sharedViewModel.readPermissionGranted
             sharedViewModel.writePermissionGranted = permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] ?: sharedViewModel.writePermissionGranted
             // Load something from external storage
-            
+
         }
     }
     /**

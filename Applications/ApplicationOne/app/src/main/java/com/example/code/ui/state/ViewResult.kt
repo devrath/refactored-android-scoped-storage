@@ -6,7 +6,7 @@ sealed class ViewResult {
 
     object InitialState : ViewResult()
 
-    data class ErrorMessage(val error : String) : ViewResult()
+    data class AlertMessage(val message : String) : ViewResult()
 
     sealed class TakePictureFromCamera: ViewResult(){
         object Success : TakePictureFromCamera()

@@ -60,6 +60,7 @@ class ExternalStorageGalleryFragment :
         if (isSavedSuccessfully) {
             //loadPhotosFromInternalStorageIntoRecyclerView()
             Toast.makeText(activity, "Photo saved successfully", Toast.LENGTH_SHORT).show()
+            sharedViewModel.displayAlert(message = "Photo saved successfully")
         } else {
             Toast.makeText(activity, "Failed to save photo", Toast.LENGTH_SHORT).show()
         }
