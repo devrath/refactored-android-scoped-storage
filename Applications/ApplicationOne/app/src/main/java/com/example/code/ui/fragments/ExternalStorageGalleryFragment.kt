@@ -67,10 +67,9 @@ class ExternalStorageGalleryFragment :
         val isSavedSuccessfully = savePhotoToExternalStorage(fileName, bitmap)
         if (isSavedSuccessfully) {
             loadPhotosFromExternalStorageIntoRecyclerView()
-            Toast.makeText(activity, "Photo saved successfully", Toast.LENGTH_SHORT).show()
             sharedViewModel.displayAlert(message = "Photo saved successfully")
         } else {
-            Toast.makeText(activity, "Failed to save photo", Toast.LENGTH_SHORT).show()
+            sharedViewModel.displayAlert(message = "Failed to save photo")
         }
     }
 
