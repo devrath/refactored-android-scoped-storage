@@ -35,12 +35,14 @@ class InternalStorageGalleryFragment :
         super.onViewCreated(view, savedInstanceState)
 
         internalStoragePhotoAdapter = InternalStoragePhotoAdapter {
-            val isDeletionSuccessful = deletePhotoFromInternalStorage(it.name)
-            if(isDeletionSuccessful) {
-                loadPhotosFromInternalStorageIntoRecyclerView()
-                Toast.makeText(activity, "Photo successfully deleted", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(activity, "Failed to delete photo", Toast.LENGTH_SHORT).show()
+            lifecycleScope.launch {
+                val isDeletionSuccessful = deletePhotoFromInternalStorage(it.name)
+                if(isDeletionSuccessful) {
+                    loadPhotosFromInternalStorageIntoRecyclerView()
+                    sharedViewModel.displayAlert(message = "Photo successfully deleted")
+                } else {
+                    sharedViewModel.displayAlert(message = "Failed to delete photo")
+                }
             }
         }
 
@@ -64,12 +66,14 @@ class InternalStorageGalleryFragment :
     }
 
     private fun refreshList(fileName: String, bitmap: Bitmap) {
-       val isSavedSuccessfully = savePhotoToInternalStorage(fileName,bitmap)
-        if (isSavedSuccessfully) {
-            loadPhotosFromInternalStorageIntoRecyclerView()
-            Toast.makeText(activity, "Photo saved successfully", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(activity, "Failed to save photo", Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch {
+            val isSavedSuccessfully = savePhotoToInternalStorage(fileName,bitmap)
+            if (isSavedSuccessfully) {
+                loadPhotosFromInternalStorageIntoRecyclerView()
+                Toast.makeText(activity, "Photo saved successfully", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(activity, "Failed to save photo", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -91,12 +95,14 @@ class InternalStorageGalleryFragment :
      * @param filename -> Name of the file to be deleted
      * @return true/false -> Based on successful and unsuccessful condition
      */
-    private fun deletePhotoFromInternalStorage(filename: String): Boolean {
-        return try {
-            requireActivity().deleteFile(filename)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
+    private suspend  fun deletePhotoFromInternalStorage(filename: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                requireActivity().deleteFile(filename)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                false
+            }
         }
     }
 
@@ -138,22 +144,24 @@ class InternalStorageGalleryFragment :
      * **********************************************************************
      * @return true/false based on if the image is successfully stored or not
      */
-    private fun savePhotoToInternalStorage(filename: String, bmp: Bitmap): Boolean {
+    private suspend fun savePhotoToInternalStorage(filename: String, bmp: Bitmap): Boolean {
         // When we are dealing with the storage, It is better to wrap our code with try/catch block since many things might go wrong
-        return try {
-            /* We use the openFileOutput to handle the streams, Bitmap is nothing but a chunk of data
-             * Use is a kotlin extension function we use for file handling, it helps us to close the stream after being used */
-            requireActivity().openFileOutput("$filename.jpg", AppCompatActivity.MODE_PRIVATE).use { stream ->
-                // Returns true if the write is successful else it throws exception
-                if(!bmp.compress(Bitmap.CompressFormat.JPEG, 95, stream)) {
-                    // Returns an exception in case of a failure
-                    throw IOException("Couldn't save bitmap.")
+        return withContext(Dispatchers.IO) {
+            try {
+                /* We use the openFileOutput to handle the streams, Bitmap is nothing but a chunk of data
+                 * Use is a kotlin extension function we use for file handling, it helps us to close the stream after being used */
+                requireActivity().openFileOutput("$filename.jpg", AppCompatActivity.MODE_PRIVATE).use { stream ->
+                    // Returns true if the write is successful else it throws exception
+                    if(!bmp.compress(Bitmap.CompressFormat.JPEG, 95, stream)) {
+                        // Returns an exception in case of a failure
+                        throw IOException("Couldn't save bitmap.")
+                    }
                 }
+                true
+            } catch(e: IOException) {
+                e.printStackTrace()
+                false
             }
-            true
-        } catch(e: IOException) {
-            e.printStackTrace()
-            false
         }
     }
 

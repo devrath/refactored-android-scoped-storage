@@ -2,6 +2,7 @@ package com.example.code.ui.fragments
 
 import android.content.ContentUris
 import android.content.ContentValues
+import android.database.ContentObserver
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -32,6 +33,8 @@ class ExternalStorageGalleryFragment :
     private val sharedViewModel by sharedViewModel<SharedViewModel>()
     private lateinit var externalStoragePhotoAdapter: SharedPhotoAdapter
 
+    private lateinit var contentObserver: ContentObserver
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -42,6 +45,25 @@ class ExternalStorageGalleryFragment :
         setupObserver()
         setupExternalStorageRecyclerView()
         loadPhotosFromExternalStorageIntoRecyclerView()
+        initContentObserver()
+    }
+
+    /**
+     * This content observer is needed to refresh the recycler view once a image is deleted from the storage
+     */
+    private fun initContentObserver() {
+        contentObserver = object : ContentObserver(null) {
+            override fun onChange(selfChange: Boolean) {
+                if(sharedViewModel.readPermissionGranted) {
+                    loadPhotosFromExternalStorageIntoRecyclerView()
+                }
+            }
+        }
+        requireActivity().contentResolver?.registerContentObserver(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                true,
+                contentObserver
+        )
     }
 
     private fun setupExternalStorageRecyclerView() = binding.rvPrivatePhotos.apply {
@@ -64,12 +86,14 @@ class ExternalStorageGalleryFragment :
     }
 
     private fun refreshList(fileName: String, bitmap: Bitmap) {
-        val isSavedSuccessfully = savePhotoToExternalStorage(fileName, bitmap)
-        if (isSavedSuccessfully) {
-            loadPhotosFromExternalStorageIntoRecyclerView()
-            sharedViewModel.displayAlert(message = "Photo saved successfully")
-        } else {
-            sharedViewModel.displayAlert(message = "Failed to save photo")
+        lifecycleScope.launch {
+            val isSavedSuccessfully = savePhotoToExternalStorage(fileName, bitmap)
+            if (isSavedSuccessfully) {
+                loadPhotosFromExternalStorageIntoRecyclerView()
+                sharedViewModel.displayAlert(message = "Photo saved successfully")
+            } else {
+                sharedViewModel.displayAlert(message = "Failed to save photo")
+            }
         }
     }
 
@@ -140,52 +164,55 @@ class ExternalStorageGalleryFragment :
      * **********************************************************************
      * @return true/false based on if the image is successfully stored or not
      */
-    private fun savePhotoToExternalStorage(displayName: String, bmp: Bitmap): Boolean {
-        /* ******************************************************************
-         * MEDIA STORE:-> It is a huge data base with all media files and corresponding meta data
-         * USAGE of media store:-> With the media store we can get the collection of images and add image to that collection
-         * URI:-> Address where the image is stored
-         * USAGE of uri:-> Getting the uri is different below API 29 and different above 29 remember
-         * ******************************************************************
-         * */
-        val imageCollection = deviceImageCollection()
+    private suspend fun savePhotoToExternalStorage(displayName: String, bmp: Bitmap): Boolean {
 
-        /**
-         * We not just want to save the bitmap but also the meta data along with it
-         * These data can be used by us and other apps -> For that we use content values
-         * CONTENT VALUES: They are similar to bundles where we can
-         * **/
-        val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "$displayName.jpg")
-            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-            put(MediaStore.Images.Media.WIDTH, bmp.width)
-            put(MediaStore.Images.Media.HEIGHT, bmp.height)
-        }
+        return withContext(Dispatchers.IO){
+            /* ******************************************************************
+            * MEDIA STORE:-> It is a huge data base with all media files and corresponding meta data
+            * USAGE of media store:-> With the media store we can get the collection of images and add image to that collection
+            * URI:-> Address where the image is stored
+            * USAGE of uri:-> Getting the uri is different below API 29 and different above 29 remember
+            * ******************************************************************
+            * */
+            val imageCollection = deviceImageCollection()
 
-        return try {
-
-            requireActivity().let {
-                // We use content resolver to insert all the media store entries or read them.
-
-                // Insert at a particular URI and at that Uri we have to add all the content values
-                it.contentResolver.insert(imageCollection, contentValues)?.also { uri ->
-                    /* We use the openFileOutput to handle the streams, Bitmap is nothing but a chunk of data
-                     * Use is a kotlin extension function we use for file handling, it helps us to close the stream after being used */
-                    activity?.contentResolver?.openOutputStream(uri).use { outputStream ->
-                        // Returns true if the write is successful else it throws exception
-                        if (!bmp.compress(Bitmap.CompressFormat.JPEG, 95, outputStream)) {
-                            // Returns an exception in case of a failure
-                            throw IOException("Couldn't save bitmap")
-                        }
-
-                    }
-                } ?: throw IOException("Couldn't create MediaStore entry")
+            /**
+             * We not just want to save the bitmap but also the meta data along with it
+             * These data can be used by us and other apps -> For that we use content values
+             * CONTENT VALUES: They are similar to bundles where we can
+             * **/
+            val contentValues = ContentValues().apply {
+                put(MediaStore.Images.Media.DISPLAY_NAME, "$displayName.jpg")
+                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                put(MediaStore.Images.Media.WIDTH, bmp.width)
+                put(MediaStore.Images.Media.HEIGHT, bmp.height)
             }
 
-            true
-        } catch (e: IOException) {
-            e.printStackTrace()
-            false
+            try {
+
+                requireActivity().let {
+                    // We use content resolver to insert all the media store entries or read them.
+
+                    // Insert at a particular URI and at that Uri we have to add all the content values
+                    it.contentResolver.insert(imageCollection, contentValues)?.also { uri ->
+                        /* We use the openFileOutput to handle the streams, Bitmap is nothing but a chunk of data
+                         * Use is a kotlin extension function we use for file handling, it helps us to close the stream after being used */
+                        activity?.contentResolver?.openOutputStream(uri).use { outputStream ->
+                            // Returns true if the write is successful else it throws exception
+                            if (!bmp.compress(Bitmap.CompressFormat.JPEG, 95, outputStream)) {
+                                // Returns an exception in case of a failure
+                                throw IOException("Couldn't save bitmap")
+                            }
+
+                        }
+                    } ?: throw IOException("Couldn't create MediaStore entry")
+                }
+
+                true
+            } catch (e: IOException) {
+                e.printStackTrace()
+                false
+            }
         }
     }
 
@@ -210,4 +237,9 @@ class ExternalStorageGalleryFragment :
         MediaStore.Images.Media.EXTERNAL_CONTENT_URI
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        requireActivity().contentResolver.unregisterContentObserver(contentObserver)
+    }
 }

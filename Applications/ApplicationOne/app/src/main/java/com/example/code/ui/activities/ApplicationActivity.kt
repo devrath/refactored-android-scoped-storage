@@ -159,7 +159,11 @@ class ApplicationActivity :
             sharedViewModel.readPermissionGranted = permissions[Manifest.permission.READ_EXTERNAL_STORAGE] ?: sharedViewModel.readPermissionGranted
             sharedViewModel.writePermissionGranted = permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] ?: sharedViewModel.writePermissionGranted
             // Load something from external storage
-
+           /*if(readPermissionGranted) {
+               loadPhotosFromExternalStorageIntoRecyclerView()
+           } else {
+               Toast.makeText(this, "Can't read files without permission.", Toast.LENGTH_LONG).show()
+           }*/
         }
     }
     /**
