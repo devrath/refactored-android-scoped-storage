@@ -4,6 +4,7 @@ import android.app.Application
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.code.ui.state.ViewResult
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -20,6 +21,7 @@ class SharedViewModel (application: Application) : AndroidViewModel(application)
     private val _view = MutableSharedFlow<ViewResult>()
     val view: SharedFlow<ViewResult> = _view
 
+    var deleteImage: MutableLiveData<Unit> = MutableLiveData()
 
     var isPrivate = false
     var readPermissionGranted = false
@@ -60,10 +62,7 @@ class SharedViewModel (application: Application) : AndroidViewModel(application)
 
 
     fun deleteImageFromExternalStorage() {
-        viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
-            val result = ViewResult.DeletePictureFromStorage
-            _view.emit(result)
-        }
+        deleteImage.value = Unit
     }
 
 }

@@ -127,16 +127,17 @@ class ApplicationActivity :
                 setViewState(it)
             }
         }
+
+        sharedViewModel.deleteImage.observe(this, {
+            lifecycleScope.launch {
+                deletePhotoFromExternalStorage(sharedViewModel.deletedImageUri ?: return@launch)
+            }
+        })
     }
 
     private fun setViewState(it: ViewResult) {
         when (it) {
             is ViewResult.AlertMessage -> displayAlert(it.message)
-            is ViewResult.DeletePictureFromStorage -> {
-                lifecycleScope.launch {
-                    deletePhotoFromExternalStorage(sharedViewModel.deletedImageUri ?: return@launch)
-                }
-            }
         }
     }
 
@@ -211,12 +212,6 @@ class ApplicationActivity :
        permissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             sharedViewModel.readPermissionGranted = permissions[Manifest.permission.READ_EXTERNAL_STORAGE] ?: sharedViewModel.readPermissionGranted
             sharedViewModel.writePermissionGranted = permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] ?: sharedViewModel.writePermissionGranted
-            // Load something from external storage
-           /*if(readPermissionGranted) {
-               loadPhotosFromExternalStorageIntoRecyclerView()
-           } else {
-               Toast.makeText(this, "Can't read files without permission.", Toast.LENGTH_LONG).show()
-           }*/
         }
     }
     /**

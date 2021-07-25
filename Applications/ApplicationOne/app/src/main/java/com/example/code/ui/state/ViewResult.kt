@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 sealed class ViewResult {
     object InitialState : ViewResult()
     data class AlertMessage(val message : String) : ViewResult()
-    object DeletePictureFromStorage : ViewResult()
     data class LoadImagesFromInternalStorage(val fileName : String, val bitmap: Bitmap) : ViewResult()
     data class LoadImagesFromExternalStorage(val fileName : String, val bitmap: Bitmap) : ViewResult()
 }
