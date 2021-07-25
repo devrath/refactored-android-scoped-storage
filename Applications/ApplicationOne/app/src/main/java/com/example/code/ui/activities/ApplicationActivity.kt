@@ -36,8 +36,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 
-class ApplicationActivity :
-        BaseActivity<ActivityApplicationBinding>(ActivityApplicationBinding::inflate) {
+class ApplicationActivity : BaseActivity<ActivityApplicationBinding>(ActivityApplicationBinding::inflate) {
 
     private val sharedViewModel by viewModel<SharedViewModel>()
 

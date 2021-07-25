@@ -28,18 +28,25 @@ class ExternalStorageGalleryFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupObserver()
+        setupExternalStorageRecyclerView()
+        setAdapter()
+        initContentObserver()
+        loadPhotosFromExternalStorageIntoRecyclerView()
+    }
 
+    /**
+     * Set the adapter of the list view
+     */
+    private fun setAdapter() {
         externalStoragePhotoAdapter = SharedPhotoAdapter {
+            // ------> Handle on click of the list view
             lifecycleScope.launch {
+                // Set the URI to be deleted in the shared view model to access in the activity
                 sharedViewModel.deletedImageUri = it.contentUri
                 sharedViewModel.deleteImageFromExternalStorage()
             }
         }
-
-        setupObserver()
-        setupExternalStorageRecyclerView()
-        loadPhotosFromExternalStorageIntoRecyclerView()
-        initContentObserver()
     }
 
     /**
