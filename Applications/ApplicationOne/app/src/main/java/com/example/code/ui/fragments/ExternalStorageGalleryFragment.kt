@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.code.R
 import com.example.code.databinding.FragmentExternalStorageGalleryBinding
@@ -50,9 +51,17 @@ class ExternalStorageGalleryFragment :
 
     private fun setViewState(it: ViewResult) {
         when (it) {
-            is ViewResult.LoadImagesFromInternalStorage.Success -> {
-                // refreshList(it.fileName,it.bitmap)
-            }
+            is ViewResult.LoadImagesFromExternalStorage.Success -> refreshList(it.fileName,it.bitmap)
+        }
+    }
+
+    private fun refreshList(fileName: String, bitmap: Bitmap) {
+        val isSavedSuccessfully = savePhotoToExternalStorage(fileName,bitmap)
+        if (isSavedSuccessfully) {
+            //loadPhotosFromInternalStorageIntoRecyclerView()
+            Toast.makeText(activity, "Photo saved successfully", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(activity, "Failed to save photo", Toast.LENGTH_SHORT).show()
         }
     }
 

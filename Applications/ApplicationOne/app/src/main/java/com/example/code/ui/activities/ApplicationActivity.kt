@@ -29,7 +29,6 @@ class ApplicationActivity :
         BaseActivity<ActivityApplicationBinding>(ActivityApplicationBinding::inflate) {
 
     private val sharedViewModel by viewModel<SharedViewModel>()
-    private var isPrivate: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,8 +88,17 @@ class ApplicationActivity :
     }
 
     private fun launchCamera(isPrivate: Boolean) {
-        this.isPrivate = isPrivate
-        takePhoto.launch()
+        // Update the flag in the view model
+        sharedViewModel.isPrivate = isPrivate
+
+        when {
+            sharedViewModel.isPrivate -> takePhoto.launch()
+            else -> {
+                registerForExternalStoragePermissions()
+                updateOrRequestPermissions()
+            }
+        }
+
     }
 
     /**
@@ -122,7 +130,7 @@ class ApplicationActivity :
         }
         // Launch the permissions by passing the permissions array
         if (permissionsToRequest.isNotEmpty()) {
-            permissionsLauncher.launch(permissionsToRequest.toTypedArray())
+            sharedViewModel.permissionsLauncher.launch(permissionsToRequest.toTypedArray())
         }
     }
 
@@ -131,18 +139,21 @@ class ApplicationActivity :
      * ************************************ ON-ACTIVITY-RESULT *************************************
      */
     private val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
-        if (isPrivate) {
-            sharedViewModel.loadImagesFromInternalStorage(bitmap = it)
+        it?.let { imageBitmap ->
+            when {
+                sharedViewModel.isPrivate -> sharedViewModel.storeImageToInternalStorage(bitmap = imageBitmap)
+                sharedViewModel.writePermissionGranted -> sharedViewModel.storeImageToExternalStorage(bitmap = imageBitmap)
+            }
         }
     }
 
-    private val permissionsLauncher: ActivityResultLauncher<Array<String>> = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-        sharedViewModel.readPermissionGranted = permissions[Manifest.permission.READ_EXTERNAL_STORAGE]
-                ?: sharedViewModel.readPermissionGranted
-        sharedViewModel.writePermissionGranted = permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE]
-                ?: sharedViewModel.writePermissionGranted
-
-
+    private fun registerForExternalStoragePermissions() {
+        sharedViewModel.permissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            sharedViewModel.readPermissionGranted = permissions[Manifest.permission.READ_EXTERNAL_STORAGE] ?: sharedViewModel.readPermissionGranted
+            sharedViewModel.writePermissionGranted = permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] ?: sharedViewModel.writePermissionGranted
+            // Load something from external storage
+            
+        }
     }
     /**
      * ************************************ ON-ACTIVITY-RESULT *************************************

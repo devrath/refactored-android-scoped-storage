@@ -26,10 +26,10 @@ sealed class ViewResult {
         object LoadImages : LoadImagesFromInternalStorage()
     }
 
-    sealed class SaveImageToInternalStorage: ViewResult(){
-        object Success : SaveImageToInternalStorage()
-        data class Failure(val error : String) : SaveImageToInternalStorage()
-        object LoadImages : SaveImageToInternalStorage()
+    sealed class LoadImagesFromExternalStorage: ViewResult(){
+        data class Success(val fileName : String, val bitmap: Bitmap) : LoadImagesFromExternalStorage()
+        data class Failure(val error : String) : LoadImagesFromExternalStorage()
+        object LoadImages : LoadImagesFromExternalStorage()
     }
 
 }

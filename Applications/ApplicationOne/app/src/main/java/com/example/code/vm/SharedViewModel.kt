@@ -2,6 +2,7 @@ package com.example.code.vm
 
 import android.app.Application
 import android.graphics.Bitmap
+import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.code.ui.state.ViewResult
@@ -17,6 +18,9 @@ class SharedViewModel (application: Application) : AndroidViewModel(application)
     private val _view = MutableStateFlow<ViewResult>(ViewResult.InitialState)
     val view = _view.asStateFlow()
 
+    lateinit var permissionsLauncher: ActivityResultLauncher<Array<String>>
+
+    var isPrivate = false
     var readPermissionGranted = false
     var writePermissionGranted = false
 
@@ -28,12 +32,21 @@ class SharedViewModel (application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun loadImagesFromInternalStorage(bitmap: Bitmap) {
+    fun storeImageToInternalStorage(bitmap: Bitmap) {
         viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             val name : String = UUID.randomUUID().toString()
             val result = ViewResult.LoadImagesFromInternalStorage.Success(fileName = name, bitmap = bitmap)
             _view.emit(result)
         }
     }
+
+    fun storeImageToExternalStorage(bitmap: Bitmap) {
+        viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
+            val name : String = UUID.randomUUID().toString()
+            val result = ViewResult.LoadImagesFromExternalStorage.Success(fileName = name, bitmap = bitmap)
+            _view.emit(result)
+        }
+    }
+
 
 }
