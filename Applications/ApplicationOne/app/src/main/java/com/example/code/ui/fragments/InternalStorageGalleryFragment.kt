@@ -54,7 +54,7 @@ class InternalStorageGalleryFragment :
 
     private fun setViewState(it: ViewResult) {
         when (it) {
-            is ViewResult.LoadImagesFromInternalStorage.Success -> refreshList(it.fileName,it.bitmap)
+            is ViewResult.LoadImagesFromInternalStorage -> refreshList(it.fileName,it.bitmap)
         }
     }
 

@@ -132,7 +132,7 @@ class ApplicationActivity :
     private fun setViewState(it: ViewResult) {
         when (it) {
             is ViewResult.AlertMessage -> displayAlert(it.message)
-            is ViewResult.DeletePictureFromStorage.Success -> {
+            is ViewResult.DeletePictureFromStorage -> {
                 lifecycleScope.launch {
                     deletePhotoFromExternalStorage(sharedViewModel.deletedImageUri ?: return@launch)
                 }

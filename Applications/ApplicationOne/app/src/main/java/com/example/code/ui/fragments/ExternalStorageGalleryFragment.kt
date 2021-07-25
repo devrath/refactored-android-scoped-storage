@@ -75,7 +75,7 @@ class ExternalStorageGalleryFragment :
 
     private fun setViewState(it: ViewResult) {
         when (it) {
-            is ViewResult.LoadImagesFromExternalStorage.Success -> refreshList(it.fileName, it.bitmap)
+            is ViewResult.LoadImagesFromExternalStorage -> refreshList(it.fileName, it.bitmap)
         }
     }
 

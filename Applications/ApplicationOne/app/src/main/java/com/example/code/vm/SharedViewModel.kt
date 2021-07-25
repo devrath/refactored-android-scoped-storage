@@ -38,7 +38,7 @@ class SharedViewModel (application: Application) : AndroidViewModel(application)
     fun storeImageToInternalStorage(bitmap: Bitmap) {
         viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             val name : String = UUID.randomUUID().toString()
-            val result = ViewResult.LoadImagesFromInternalStorage.Success(fileName = name, bitmap = bitmap)
+            val result = ViewResult.LoadImagesFromInternalStorage(fileName = name, bitmap = bitmap)
             _view.emit(result)
         }
     }
@@ -46,7 +46,7 @@ class SharedViewModel (application: Application) : AndroidViewModel(application)
     fun storeImageToExternalStorage(bitmap: Bitmap) {
         viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             val name : String = UUID.randomUUID().toString()
-            val result = ViewResult.LoadImagesFromExternalStorage.Success(fileName = name, bitmap = bitmap)
+            val result = ViewResult.LoadImagesFromExternalStorage(fileName = name, bitmap = bitmap)
             _view.emit(result)
         }
     }
@@ -61,7 +61,7 @@ class SharedViewModel (application: Application) : AndroidViewModel(application)
 
     fun deleteImageFromExternalStorage() {
         viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
-            val result = ViewResult.DeletePictureFromStorage.Success
+            val result = ViewResult.DeletePictureFromStorage
             _view.emit(result)
         }
     }
