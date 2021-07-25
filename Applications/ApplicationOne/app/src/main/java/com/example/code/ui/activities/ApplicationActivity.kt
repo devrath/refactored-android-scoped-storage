@@ -1,9 +1,14 @@
 package com.example.code.ui.activities
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -21,10 +26,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 class ApplicationActivity :
-    BaseActivity<ActivityApplicationBinding>(ActivityApplicationBinding::inflate) {
+        BaseActivity<ActivityApplicationBinding>(ActivityApplicationBinding::inflate) {
 
     private val sharedViewModel by viewModel<SharedViewModel>()
     private var isPrivate: Boolean = false
+
+    private var readPermissionGranted = false
+    private var writePermissionGranted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,11 +47,11 @@ class ApplicationActivity :
         binding.apply {
 
             val appBarConfiguration = AppBarConfiguration(
-                setOf(
-                    R.id.navigation_internal_storage_gallery_fragment,
-                    R.id.navigation_external_storage_gallery_fragment,
-                    R.id.navigation_camera_fragment
-                )
+                    setOf(
+                            R.id.navigation_internal_storage_gallery_fragment,
+                            R.id.navigation_external_storage_gallery_fragment,
+                            R.id.navigation_camera_fragment
+                    )
             )
             setupActionBarWithNavController(navHostFragment.navController, appBarConfiguration)
             navView.setupWithNavController(navHostFragment.navController)
@@ -77,10 +85,10 @@ class ApplicationActivity :
 
     private fun launchSelectionAlert() {
         MaterialAlertDialogBuilder(this@ApplicationActivity)
-            .setMessage(R.string.select_the_mode_of_storage)
-            .setPositiveButton(R.string.private_true) { _, _ -> launchCamera(isPrivate = true) }
-            .setNegativeButton(R.string.private_false) { _, _ -> launchCamera(isPrivate = false) }
-            .show()
+                .setMessage(R.string.select_the_mode_of_storage)
+                .setPositiveButton(R.string.private_true) { _, _ -> launchCamera(isPrivate = true) }
+                .setNegativeButton(R.string.private_false) { _, _ -> launchCamera(isPrivate = false) }
+                .show()
     }
 
     private fun launchCamera(isPrivate: Boolean) {
@@ -88,13 +96,41 @@ class ApplicationActivity :
         takePhoto.launch()
     }
 
+    private fun updateOrRequestPermissions() {
+        val hasReadPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        val hasWritePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        val minSdk29 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+
+        readPermissionGranted = hasReadPermission
+        writePermissionGranted = hasWritePermission || minSdk29
+
+        val permissionsToRequest = mutableListOf<String>()
+
+        if (!writePermissionGranted) { permissionsToRequest.add(Manifest.permission.WRITE_EXTERNAL_STORAGE) }
+        if (!readPermissionGranted) { permissionsToRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE) }
+        if (permissionsToRequest.isNotEmpty()) { permissionsLauncher.launch(permissionsToRequest.toTypedArray()) }
+    }
+
+
     /**
-     * ON-ACTIVITY-RESULT
+     * ************************************ ON-ACTIVITY-RESULT *************************************
      */
     private val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
         if (isPrivate) {
             sharedViewModel.loadImagesFromInternalStorage(bitmap = it)
         }
     }
+
+    private val permissionsLauncher: ActivityResultLauncher<Array<String>> = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        readPermissionGranted = permissions[Manifest.permission.READ_EXTERNAL_STORAGE]
+                ?: readPermissionGranted
+        writePermissionGranted = permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE]
+                ?: writePermissionGranted
+
+
+    }
+    /**
+     * ************************************ ON-ACTIVITY-RESULT *************************************
+     */
 
 }

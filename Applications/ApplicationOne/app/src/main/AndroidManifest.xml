@@ -2,7 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.code">
 
+    <!-- With this permission we can read the data from external storage,
+    meaning data that are also stored by other apps  -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- This permission is required to read data from the external storage
+    point to note that, this is required only till max of sdk version 28,
+    Later to this version, It is handled by the scoped storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28"/>
 

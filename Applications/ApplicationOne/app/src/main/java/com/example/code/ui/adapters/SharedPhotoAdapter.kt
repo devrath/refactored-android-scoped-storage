@@ -40,13 +40,6 @@ class SharedPhotoAdapter(
         holder.binding.apply {
             ivPhoto.setImageURI(photo.contentUri)
 
-            val aspectRatio = photo.width.toFloat() / photo.height.toFloat()
-            ConstraintSet().apply {
-                clone(root)
-                setDimensionRatio(ivPhoto.id, aspectRatio.toString())
-                applyTo(root)
-            }
-
             ivPhoto.setOnLongClickListener {
                 onPhotoClick(photo)
                 true
