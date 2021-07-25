@@ -30,7 +30,10 @@ class ExternalStorageGalleryFragment :
         super.onViewCreated(view, savedInstanceState)
 
         externalStoragePhotoAdapter = SharedPhotoAdapter {
-
+            lifecycleScope.launch {
+                sharedViewModel.deletedImageUri = it.contentUri
+                sharedViewModel.deleteImageFromExternalStorage()
+            }
         }
 
         setupObserver()

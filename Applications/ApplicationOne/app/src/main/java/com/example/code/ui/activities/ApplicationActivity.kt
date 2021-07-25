@@ -1,13 +1,17 @@
 package com.example.code.ui.activities
 
 import android.Manifest
+import android.app.RecoverableSecurityException
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.Gravity
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
 import androidx.appcompat.app.AlertDialog
@@ -24,7 +28,10 @@ import com.example.code.ui.state.ViewResult
 import com.example.code.vm.SharedViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -35,6 +42,7 @@ class ApplicationActivity :
     private val sharedViewModel by viewModel<SharedViewModel>()
 
     lateinit var permissionsLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var intentSenderLauncher: ActivityResultLauncher<IntentSenderRequest>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +50,47 @@ class ApplicationActivity :
         setupObserver()
         setOnClickListener()
         registerForExternalStoragePermissions()
+        registerIntentSenderForImageDeletion()
         updateOrRequestPermissions()
+    }
+
+    private fun registerIntentSenderForImageDeletion() {
+        intentSenderLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+            if(it.resultCode == RESULT_OK) {
+                if(Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+                    lifecycleScope.launch {
+                        deletePhotoFromExternalStorage(sharedViewModel.deletedImageUri ?: return@launch)
+                    }
+                }
+                Toast.makeText(this, "Photo deleted successfully", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Photo couldn't be deleted", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private suspend fun deletePhotoFromExternalStorage(photoUri: Uri) {
+        withContext(Dispatchers.IO) {
+            try {
+                contentResolver.delete(photoUri, null, null)
+            } catch (e: SecurityException) {
+                val intentSender = when {
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
+                        MediaStore.createDeleteRequest(contentResolver, listOf(photoUri)).intentSender
+                    }
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
+                        val recoverableSecurityException = e as? RecoverableSecurityException
+                        recoverableSecurityException?.userAction?.actionIntent?.intentSender
+                    }
+                    else -> null
+                }
+                intentSender?.let { sender ->
+                    intentSenderLauncher.launch(
+                            IntentSenderRequest.Builder(sender).build()
+                    )
+                }
+            }
+        }
     }
 
     private fun setUpNavView() {
@@ -84,6 +132,11 @@ class ApplicationActivity :
     private fun setViewState(it: ViewResult) {
         when (it) {
             is ViewResult.AlertMessage -> displayAlert(it.message)
+            is ViewResult.DeletePictureFromStorage.Success -> {
+                lifecycleScope.launch {
+                    deletePhotoFromExternalStorage(sharedViewModel.deletedImageUri ?: return@launch)
+                }
+            }
         }
     }
 

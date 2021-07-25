@@ -2,6 +2,7 @@ package com.example.code.vm
 
 import android.app.Application
 import android.graphics.Bitmap
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.code.ui.state.ViewResult
@@ -20,6 +21,8 @@ class SharedViewModel (application: Application) : AndroidViewModel(application)
     var isPrivate = false
     var readPermissionGranted = false
     var writePermissionGranted = false
+
+    var deletedImageUri: Uri? = null
 
     private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
         viewModelScope.launch(Dispatchers.Main) {
@@ -48,6 +51,14 @@ class SharedViewModel (application: Application) : AndroidViewModel(application)
     fun displayAlert(message: String) {
         viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
             val result = ViewResult.AlertMessage(message = message)
+            _view.emit(result)
+        }
+    }
+
+
+    fun deleteImageFromExternalStorage() {
+        viewModelScope.launch(Dispatchers.IO + exceptionHandler) {
+            val result = ViewResult.DeletePictureFromStorage.Success
             _view.emit(result)
         }
     }
