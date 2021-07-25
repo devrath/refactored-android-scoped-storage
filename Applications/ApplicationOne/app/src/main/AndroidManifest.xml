@@ -21,8 +21,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.InternalStorageImagesActivity"
-            android:label="@string/internal_storage_images"/>
         <activity android:name=".ui.activities.MainActivity"
             android:label="@string/internal_storage_images"/>
 
