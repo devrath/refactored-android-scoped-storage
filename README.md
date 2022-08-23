@@ -40,11 +40,29 @@
   * `Output streams` --> Used for writing data to a file.
 * We get a reference to a file or directory, Then Using that obtained reference create an `input stream` or the `output stream`. Then using the particular stream we modify or read the data.
 
+## `𝚃𝚢𝚙𝚎𝚜 𝚘𝚏 𝚂𝚝𝚘𝚛𝚊𝚐𝚎𝚜 𝚒𝚗 𝙰𝚗𝚍𝚛𝚘𝚒𝚍`
+<p align="center">
+  <img src="https://github.com/devrath/refactored-android-scoped-storage/blob/main/assets/typesOfStorage.png">
+</p>
+
+### `𝙸𝚗𝚝𝚎𝚛𝚗𝚊𝚕 𝚂𝚝𝚘𝚛𝚊𝚐𝚎`
+* Each application has a `private directory`.
+* Thus many applications have their own `individual private directories`
+* The private directory of one application is not visible to the other application.
+* This is the easiest way of storing the data 
+* Permission is not required to store the data in the internal storage
+
+### `𝙴𝚡𝚝𝚎𝚛𝚗𝚊𝚕 𝚂𝚝𝚘𝚛𝚊𝚐𝚎`
+* Everything else apart from the internal storage is considered as external storage.
+* Permission is required for storing data in external storage.
+* Once you store the data(ex:-image) in the external storage, all the apps can access this data.
+* But all the images stored in external storage are tracked by the apps that created it.
+* Say `application-1` creates one image in the external storage, and the `application-2` cannot delete it directly, instead requires the permission of the user before deleting it.
+
 
 
 | **` Contents of Wiki `** |
 | ------------------------ |
-| [**` Types of Storages in Android `** ](https://github.com/devrath/refactored-android-scoped-storage/wiki/Types-of-Storages-in-Android) |
 | [**` Problems associated with external storage `** ](https://github.com/devrath/refactored-android-scoped-storage/wiki/Problems-associated-with-external-storage) |
 | [**` How scoped storage is a solution to external storage drawbacks `** ](https://github.com/devrath/refactored-android-scoped-storage/wiki/How-scoped-storage-is-a-solution-to-external-storage-drawbacks) |
 | [**` Flow diagram representation of storing data `** ](https://github.com/devrath/refactored-android-scoped-storage/wiki/Flow-diagram-representation-of-storing-data) |
