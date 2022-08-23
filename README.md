@@ -10,9 +10,14 @@
 <a><img src="https://img.shields.io/badge/Storage-scoped--storage-pink"></a>
 </p>
 
+## `𝚆𝚑𝚊𝚝 𝚒𝚜 𝚊 𝚂𝚌𝚘𝚙𝚎𝚍 𝚂𝚝𝚘𝚛𝚊𝚐𝚎`💡
+🏷️ We are aware that working with a file system is a very important part of android development. Till the android `version-10`, once the user gave permission to access the external storage, he could access any file on the device.</br>
+🏷️ But most of the time we don't need the entire storage system to be accessed. Users mostly do some action on a file or a group of files and don't need access to the entire file system, due to this there was a concern of security and privacy of the user.</br>
+🏷️ The scoped storage enhances the control of user privacy on the device.
+
+
 | **` Contents of Wiki `** |
 | ------------------------ |
-| [**` What is a Scoped Storage `** ](https://github.com/devrath/refactored-android-scoped-storage/wiki/What-is-Scoped-Storage) |
 | [**` What is a File System `** ](https://github.com/devrath/refactored-android-scoped-storage/wiki/What-is-a-File-System) |
 | [**` Types of Storages in Android `** ](https://github.com/devrath/refactored-android-scoped-storage/wiki/Types-of-Storages-in-Android) |
 | [**` Problems associated with external storage `** ](https://github.com/devrath/refactored-android-scoped-storage/wiki/Problems-associated-with-external-storage) |
