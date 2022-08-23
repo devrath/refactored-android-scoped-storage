@@ -59,14 +59,49 @@
 * But all the images stored in external storage are tracked by the apps that created it.
 * Say `application-1` creates one image in the external storage, and the `application-2` cannot delete it directly, instead requires the permission of the user before deleting it.
 
+## `𝙿𝚛𝚘𝚋𝚕𝚎𝚖𝚜 𝚊𝚜𝚜𝚘𝚌𝚒𝚊𝚝𝚎𝚍 𝚠𝚒𝚝𝚑 𝚎𝚡𝚝𝚎𝚛𝚗𝚊𝚕 𝚜𝚝𝚘𝚛𝚊𝚐𝚎`
+* Lot of applications need permission.
+```xml
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+``` 
+* Basically anyone with the above permission can access the files from external storage. Describing more like say We build an app and we can access all the images stored in external storage using above permission
+* But most of them do only simple things with it. One example of this is you want to access `photos` in `external storage`, but you might not need `pdf`, `doc` etc. 
+* They might not have needed to access the whole storage but earlier they could.
+* The files are left in external storage sometimes and occupy space.
+* Even though the application is un-installed still the files are left as it is in the external storage.
 
+## `𝙷𝚘𝚠 𝚜𝚌𝚘𝚙𝚎𝚍 𝚜𝚝𝚘𝚛𝚊𝚐𝚎 𝚒𝚜 𝚊 𝚜𝚘𝚕𝚞𝚝𝚒𝚘𝚗 𝚝𝚘 𝚎𝚡𝚝𝚎𝚛𝚗𝚊𝚕 𝚜𝚝𝚘𝚛𝚊𝚐𝚎 𝚍𝚛𝚊𝚠𝚋𝚊𝚌𝚔𝚜`
+<p align="center">
+<h4>Scope storage was introduced to increase user privacy and give the end-user the decision making step to control their privacy</h2>
+</p>
 
-| **` Contents of Wiki `** |
-| ------------------------ |
-| [**` Problems associated with external storage `** ](https://github.com/devrath/refactored-android-scoped-storage/wiki/Problems-associated-with-external-storage) |
-| [**` How scoped storage is a solution to external storage drawbacks `** ](https://github.com/devrath/refactored-android-scoped-storage/wiki/How-scoped-storage-is-a-solution-to-external-storage-drawbacks) |
-| [**` Flow diagram representation of storing data `** ](https://github.com/devrath/refactored-android-scoped-storage/wiki/Flow-diagram-representation-of-storing-data) |
+* Scoped storage was a solution to the problem. 
+* Scoped storage is optional in **`android-10`** but has become compulsory in **`android-11`**.
+* Because of scoped storage, System knows which application has created which file and has a track of each file, Thus when an application is uninstalled all the files that it created are also un-installed.
+* Every application has access to its **`directory`** in `external storage` and **`does not need permission`**.
 
+### `𝙼𝚘𝚍𝚒𝚏𝚢𝚒𝚗𝚐 𝚏𝚒𝚕𝚎𝚜 𝚒𝚗 𝚎𝚡𝚝𝚎𝚛𝚗𝚊𝚕 𝚜𝚝𝚘𝚛𝚊𝚐𝚎 𝚌𝚛𝚎𝚊𝚝𝚎𝚍 𝚏𝚛𝚘𝚖 𝚘𝚝𝚑𝚎𝚛 𝚊𝚙𝚙𝚕𝚒𝚌𝚊𝚝𝚒𝚘𝚗𝚜?`
+<p align="left">
+  <img width=300 width=200 src="https://github.com/devrath/refactored-android-scoped-storage/blob/main/assets/files.gif">
+</p>
+
+* We can perform this action using **`createWriteRequest`**, **`createDeleteRequest`** and modify the files in the directory created by other applications in `external storage`
+* But the catch here is, that it requires the approval of the user.
+
+### `𝙳𝚎𝚕𝚎𝚝𝚒𝚗𝚐 𝚝𝚑𝚎 𝚏𝚒𝚕𝚎𝚜`
+* We can now `move the files to the trash` instead of `deleting them`.
+* We can recover the items from the trash in a `30-days` life span.
+
+### `𝚂𝚙𝚎𝚌𝚒𝚊𝚕 𝚊𝚙𝚙𝚕𝚒𝚌𝚊𝚝𝚒𝚘𝚗𝚜 𝚝𝚑𝚊𝚝 𝚒𝚗𝚟𝚘𝚕𝚟𝚎 𝚏𝚒𝚕𝚎 𝚑𝚊𝚗𝚍𝚕𝚒𝚗𝚐`
+* Some of the applications that are just developed to handle the files themselves need access to the entire file system because that's the primary purpose of the application. How will that get handled is using special permission called.
+```kotlin
+<uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+```
+* If we add this permission, we do get access to the entire `file folder`. 
+* But to add this to the play store, we need to follow a review process and approval from google justifying why this permission is required.
+* After all the process, like any other permission, end users can disable the permission in the settings.
+
+## `𝙵𝚕𝚘𝚠 𝚍𝚒𝚊𝚐𝚛𝚊𝚖 𝚛𝚎𝚙𝚛𝚎𝚜𝚎𝚗𝚝𝚊𝚝𝚒𝚘𝚗 𝚘𝚏 𝚜𝚝𝚘𝚛𝚒𝚗𝚐 𝚍𝚊𝚝𝚊`
 ---
 <p align="center">
   <img src="https://github.com/devrath/refactored-android-scoped-storage/blob/main/assets/ScopeStorage.png">
