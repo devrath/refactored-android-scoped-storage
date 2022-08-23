@@ -67,7 +67,9 @@ class ExternalStorageGalleryFragment : BaseFragment<FragmentExternalStorageGalle
     }
 
     private fun setupExternalStorageRecyclerView() = binding.rvPrivatePhotos.apply {
-        adapter = externalStoragePhotoAdapter
+        if(adapter!=null){
+            adapter = externalStoragePhotoAdapter
+        }
         layoutManager = GridLayoutManager(activity, 3)
     }
 
