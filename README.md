@@ -28,11 +28,7 @@
 * The file is created with a name using the stream
 
 ### `𝙷𝚘𝚠 𝚝𝚑𝚎 𝚜𝚝𝚛𝚎𝚊𝚖𝚜 𝚠𝚘𝚛𝚔`
-
-<p align="center">
-  <img src="https://github.com/devrath/refactored-android-scoped-storage/blob/main/assets/Untitled%20Diagram.png">
-</p>
-
+<img src="https://github.com/devrath/refactored-android-scoped-storage/blob/main/assets/Untitled%20Diagram.png" align="right" width="420">
 
 * Stream is a pipe that can `send data in one direction`, or `receive the data from the other direction`.
 * We have two types of streams an `input stream` and an `output stream`.
@@ -41,9 +37,7 @@
 * We get a reference to a file or directory, Then Using that obtained reference create an `input stream` or the `output stream`. Then using the particular stream we modify or read the data.
 
 ## `𝚃𝚢𝚙𝚎𝚜 𝚘𝚏 𝚂𝚝𝚘𝚛𝚊𝚐𝚎𝚜 𝚒𝚗 𝙰𝚗𝚍𝚛𝚘𝚒𝚍`
-<p align="center">
-  <img src="https://github.com/devrath/refactored-android-scoped-storage/blob/main/assets/typesOfStorage.png">
-</p>
+<img src="https://github.com/devrath/refactored-android-scoped-storage/blob/main/assets/typesOfStorage.png" align="left" width="420">
 
 ### `𝙸𝚗𝚝𝚎𝚛𝚗𝚊𝚕 𝚂𝚝𝚘𝚛𝚊𝚐𝚎`
 * Each application has a `private directory`.
@@ -81,9 +75,7 @@
 * Every application has access to its **`directory`** in `external storage` and **`does not need permission`**.
 
 ### `𝙼𝚘𝚍𝚒𝚏𝚢𝚒𝚗𝚐 𝚏𝚒𝚕𝚎𝚜 𝚒𝚗 𝚎𝚡𝚝𝚎𝚛𝚗𝚊𝚕 𝚜𝚝𝚘𝚛𝚊𝚐𝚎 𝚌𝚛𝚎𝚊𝚝𝚎𝚍 𝚏𝚛𝚘𝚖 𝚘𝚝𝚑𝚎𝚛 𝚊𝚙𝚙𝚕𝚒𝚌𝚊𝚝𝚒𝚘𝚗𝚜?`
-<p align="left">
-  <img width=300 width=200 src="https://github.com/devrath/refactored-android-scoped-storage/blob/main/assets/files.gif">
-</p>
+<img src="https://github.com/devrath/refactored-android-scoped-storage/blob/main/assets/files.gif" align="right" width="250">
 
 * We can perform this action using **`createWriteRequest`**, **`createDeleteRequest`** and modify the files in the directory created by other applications in `external storage`
 * But the catch here is, that it requires the approval of the user.
