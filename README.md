@@ -15,6 +15,11 @@
 🏷️ But most of the time we don't need the entire storage system to be accessed. Users mostly do some action on a file or a group of files and don't need access to the entire file system, due to this there was a concern of security and privacy of the user.</br>
 🏷️ The scoped storage enhances the control of user privacy on the device.
 
+## `𝙵𝚕𝚘𝚠 𝚍𝚒𝚊𝚐𝚛𝚊𝚖 𝚛𝚎𝚙𝚛𝚎𝚜𝚎𝚗𝚝𝚊𝚝𝚒𝚘𝚗 𝚘𝚏 𝚜𝚝𝚘𝚛𝚒𝚗𝚐 𝚍𝚊𝚝𝚊`
+<p align="center">
+  <img src="https://github.com/devrath/refactored-android-scoped-storage/blob/main/assets/ScopeStorage.png">
+</p>
+
 ## `𝚆𝚑𝚊𝚝 𝚒𝚜 𝚊 𝙵𝚒𝚕𝚎 𝚂𝚢𝚜𝚝𝚎𝚖`
 ### `𝙳𝚎𝚏𝚒𝚗𝚒𝚝𝚒𝚘𝚗`:
 * `FileSystem` is a way of storing data in `documents` instead of `key-value` mapping mechanism.
@@ -92,11 +97,6 @@
 * If we add this permission, we do get access to the entire `file folder`. 
 * But to add this to the play store, we need to follow a review process and approval from google justifying why this permission is required.
 * After all the process, like any other permission, end users can disable the permission in the settings.
-
-## `𝙵𝚕𝚘𝚠 𝚍𝚒𝚊𝚐𝚛𝚊𝚖 𝚛𝚎𝚙𝚛𝚎𝚜𝚎𝚗𝚝𝚊𝚝𝚒𝚘𝚗 𝚘𝚏 𝚜𝚝𝚘𝚛𝚒𝚗𝚐 𝚍𝚊𝚝𝚊`
-<p align="center">
-  <img src="https://github.com/devrath/refactored-android-scoped-storage/blob/main/assets/ScopeStorage.png">
-</p>
 
 ## **`𝙲𝚘𝚗𝚝𝚛𝚒𝚋𝚞𝚝𝚎`** 🙋‍♂️
 Read [contribution guidelines](CONTRIBUTING.md) for more information regarding contribution.
