@@ -102,7 +102,6 @@
 * After all the process, like any other permission, end users can disable the permission in the settings.
 
 ## `𝙵𝚕𝚘𝚠 𝚍𝚒𝚊𝚐𝚛𝚊𝚖 𝚛𝚎𝚙𝚛𝚎𝚜𝚎𝚗𝚝𝚊𝚝𝚒𝚘𝚗 𝚘𝚏 𝚜𝚝𝚘𝚛𝚒𝚗𝚐 𝚍𝚊𝚝𝚊`
----
 <p align="center">
   <img src="https://github.com/devrath/refactored-android-scoped-storage/blob/main/assets/ScopeStorage.png">
 </p>
