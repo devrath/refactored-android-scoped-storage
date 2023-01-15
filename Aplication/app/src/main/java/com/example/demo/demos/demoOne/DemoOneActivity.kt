@@ -19,10 +19,12 @@ import com.example.demo.R
 import com.example.demo.databinding.ActivityDemoOneBinding
 import com.example.demo.utils.PermissionUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val READ_EXTERNAL_STORAGE_REQUEST = 1
 private const val DELETE_PERMISSION_REQUEST = 2
 
+@AndroidEntryPoint
 class DemoOneActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDemoOneBinding
