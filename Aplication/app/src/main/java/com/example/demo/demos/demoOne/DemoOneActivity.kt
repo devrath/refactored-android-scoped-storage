@@ -9,6 +9,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -52,10 +54,8 @@ class DemoOneActivity : AppCompatActivity() {
              * DELETE_PERMISSION_REQUEST is a unique request code used to identify and handle the action when the request completes.
              * */
             intentSender?.let {
-                startIntentSenderForResult(
-                    intentSender, DELETE_PERMISSION_REQUEST, null, 0,
-                    0, 0, null
-                )
+                val intentSenderRequest = IntentSenderRequest.Builder(it).build()
+                phonePickIntentResultLauncher.launch(intentSenderRequest)
             }
         })
     }
@@ -193,4 +193,12 @@ class DemoOneActivity : AppCompatActivity() {
         }
         dialog.show()
     }
+
+
+    private val phonePickIntentResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            if (result != null) {
+                viewModel.deletePendingImage()
+            }
+        }
 }

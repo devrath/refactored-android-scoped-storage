@@ -5,8 +5,8 @@ import kotlin.annotation.AnnotationRetention.RUNTIME
 
 @Qualifier
 @Retention(RUNTIME)
-annotation class Dispatcher(val fileAppDispatchers: FileAppDispatchers)
+annotation class Dispatcher(val fileHandlerAppDispatchers: FileHandlerAppDispatchers)
 
-enum class FileAppDispatchers {
+enum class FileHandlerAppDispatchers {
   IO
 }

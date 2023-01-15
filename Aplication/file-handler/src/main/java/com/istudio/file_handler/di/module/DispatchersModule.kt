@@ -1,7 +1,7 @@
 package com.istudio.file_handler.di.module
 
 import com.istudio.file_handler.di.Dispatcher
-import com.istudio.file_handler.di.PokedexAppDispatchers
+import com.istudio.file_handler.di.FileHandlerAppDispatchers
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,6 +14,6 @@ import kotlinx.coroutines.Dispatchers
 object DispatchersModule {
 
   @Provides
-  @Dispatcher(PokedexAppDispatchers.IO)
+  @Dispatcher(FileHandlerAppDispatchers.IO)
   fun providesIODispatcher(): CoroutineDispatcher = Dispatchers.IO
 }
