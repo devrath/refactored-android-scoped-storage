@@ -8,26 +8,19 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.demo.R
 import com.example.demo.databinding.ActivityDemoOneBinding
-import com.example.demo.databinding.ActivitySelectionBinding
+import com.example.demo.utils.PermissionUtils
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 private const val READ_EXTERNAL_STORAGE_REQUEST = 1
-
 private const val DELETE_PERMISSION_REQUEST = 2
 
 class DemoOneActivity : AppCompatActivity() {
@@ -40,32 +33,53 @@ class DemoOneActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDemoOneBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val galleryAdapter = GalleryAdapter { image ->
-            deleteImage(image)
-        }
-
-        binding.imageGallery.also { view ->
-            view.layoutManager = GridLayoutManager(this, 3)
-            view.adapter = galleryAdapter
-        }
-
-        viewModel.images.observe(this, Observer<List<Image>> { images ->
-            galleryAdapter.submitList(images)
-        })
-
-        viewModel.permissionNeededForDelete.observe(this, Observer { intentSender ->
-            // TODO: Use the IntentSender to prompt the user for deleting the image
-        })
-
-        binding.openAlbumButton.setOnClickListener { openMediaStore() }
-        binding.grantPermissionButton.setOnClickListener { openMediaStore() }
-
-        if (!haveStoragePermission()) {
+        initImageGridAdapter()
+        setClickListeners()
+        observeVm()
+        if (!PermissionUtils.haveStoragePermission(this)) {
             binding.albumContainer.visibility = View.VISIBLE
         } else {
             showImages()
         }
+    }
+
+    private fun observeVm() {
+
+        viewModel.permissionNeededForDelete.observe(this, Observer { intentSender ->
+            /* startIntentSenderForResult() launches intentSender, which you passed to it.
+             * DELETE_PERMISSION_REQUEST is a unique request code used to identify and handle the action when the request completes.
+             * */
+            intentSender?.let {
+                startIntentSenderForResult(
+                    intentSender, DELETE_PERMISSION_REQUEST, null, 0,
+                    0, 0, null
+                )
+            }
+        })
+    }
+
+    private fun setClickListeners() {
+        binding.apply {
+            openAlbumButton.setOnClickListener { openMediaStore() }
+            grantPermissionButton.setOnClickListener { openMediaStore() }
+        }
+    }
+
+    private fun initImageGridAdapter() {
+        // Create a instance of adapter
+        val galleryAdapter = GalleryAdapter { image ->
+            // Pass the onclick action as lambda for deleting the image to the instance
+            deleteImage(image)
+        }
+        // Set the properties for the grid layout
+        binding.imageGallery.also { view ->
+            view.layoutManager = GridLayoutManager(this, 3)
+            view.adapter = galleryAdapter
+        }
+        // Observe the changes for the image collection loaded in grid view for changes
+        viewModel.images.observe(this, Observer { images ->
+            galleryAdapter.submitList(images)
+        })
     }
 
     override fun onRequestPermissionsResult(
@@ -107,17 +121,21 @@ class DemoOneActivity : AppCompatActivity() {
 
     private fun showImages() {
         viewModel.loadImages()
-        binding.albumContainer.visibility = View.GONE
-        binding.permissionContainer.visibility = View.GONE
+        binding.apply {
+            albumContainer.visibility = View.GONE
+            permissionContainer.visibility = View.GONE
+        }
     }
 
     private fun showNoAccess() {
-        binding.albumContainer.visibility = View.GONE
-        binding.permissionContainer.visibility = View.VISIBLE
+        binding.apply {
+            albumContainer.visibility = View.GONE
+            permissionContainer.visibility = View.VISIBLE
+        }
     }
 
     private fun openMediaStore() {
-        if (haveStoragePermission()) {
+        if (PermissionUtils.haveStoragePermission(this)) {
             showImages()
         } else {
             requestPermission()
@@ -137,61 +155,40 @@ class DemoOneActivity : AppCompatActivity() {
     }
 
 
-    private fun haveStoragePermission() =
-        ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
+
 
 
     private fun requestPermission() {
-        // TODO: Request the required permissions
+        if (!PermissionUtils.haveStoragePermission(this)) {
+            val permissions = arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            ActivityCompat.requestPermissions(
+                // The reference of the Activity requesting permissions.
+                this,
+                // A string array of the required permissions.
+                permissions,
+                // The requestCode, which must be unique since onRequestPermissionsResult() uses this same code to handle various user actions.
+                READ_EXTERNAL_STORAGE_REQUEST
+            )
+        }
     }
 
+    /**
+     * Dialog prompt to delete image
+     */
     private fun deleteImage(image: Image) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.delete_dialog_title)
-            .setMessage(getString(R.string.delete_dialog_message, image.displayName))
-            .setPositiveButton(R.string.delete_dialog_positive) { _: DialogInterface, _: Int ->
+        val dialog = MaterialAlertDialogBuilder(this).apply {
+            setTitle(R.string.delete_dialog_title)
+            setMessage(getString(R.string.delete_dialog_message, image.displayName))
+            setPositiveButton(R.string.delete_dialog_positive) { _: DialogInterface, _: Int ->
                 viewModel.deleteImage(image)
             }
-            .setNegativeButton(R.string.delete_dialog_negative) { dialog: DialogInterface, _: Int ->
+            setNegativeButton(R.string.delete_dialog_negative) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
             }
-            .show()
-    }
-
-    private inner class GalleryAdapter(val onClick: (Image) -> Unit) :
-        ListAdapter<Image, ImageViewHolder>(Image.DiffCallback) {
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
-            val layoutInflater = LayoutInflater.from(parent.context)
-            val view = layoutInflater.inflate(R.layout.image_layout, parent, false)
-            return ImageViewHolder(view, onClick)
         }
-
-        override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
-            val image = getItem(position)
-            holder.rootView.tag = image
-
-            Glide.with(holder.imageView)
-                .load(image.contentUri)
-                .thumbnail(0.33f)
-                .centerCrop()
-                .into(holder.imageView)
-        }
-    }
-}
-
-private class ImageViewHolder(view: View, onClick: (Image) -> Unit) :
-    RecyclerView.ViewHolder(view) {
-    val rootView = view
-    val imageView: ImageView = view.findViewById(R.id.image)
-
-    init {
-        imageView.setOnClickListener {
-            val image = rootView.tag as? Image ?: return@setOnClickListener
-            onClick(image)
-        }
+        dialog.show()
     }
 }
