@@ -12,7 +12,7 @@
         android:theme="@style/Theme.DroidStorageApp"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".SelectionActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,6 +20,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".demos.demoOne.DemoOneActivity"
+            android:exported="true">
+        </activity>
+
     </application>
 
 </manifest>
